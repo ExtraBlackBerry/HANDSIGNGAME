@@ -175,7 +175,7 @@ class GUI:
         # Button setup
         button_width = 250
         button_height = 70
-        button_y_start = 300 # Y coord of center of first button
+        button_y_start = self._SCREEN_HEIGHT // 2 # Y coord of center of first button
         button_spacing = 90
         
         host_button_rect = pygame.Rect(0, 0, button_width, button_height)
