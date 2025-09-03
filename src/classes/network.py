@@ -13,6 +13,7 @@ class NetPeer:
         host_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         host_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         host_sock.bind(('', port))
+        host_sock.listen(1)
         self.sock = host_sock
 
         def accept_loop():
@@ -79,3 +80,14 @@ class NetPeer:
                 self.sock.close()
         except Exception as e:
             print(f"Error closing socket: {e}")
+
+
+def _on_message(msg):
+    print(f"Received message: {msg}")
+
+if __name__ == "__main__":
+    _network = NetPeer()
+    _network.on_message = _on_message
+    _network.host(5678)
+    _network.send({"type":"greeting", "content":"Hello, World!"})
+    _network.close()
