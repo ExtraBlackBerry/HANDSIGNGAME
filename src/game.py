@@ -1,2 +1,2 @@
 import pygame
-from network import NetPeer
+from classes.network import NetPeer

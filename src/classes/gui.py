@@ -4,8 +4,8 @@ class GUI:
     def __init__(self):
         # Setup
         pygame.init()
-        self._SCREEN_WIDTH = 800
-        self._SCREEN_HEIGHT = 600
+        self._SCREEN_WIDTH = 1024
+        self._SCREEN_HEIGHT = 768
         self._screen = pygame.display.set_mode((self._SCREEN_WIDTH, self._SCREEN_HEIGHT))
         pygame.display.set_caption("Seal Strike - Main Menu")
         self._player_name = "None"
