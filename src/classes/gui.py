@@ -4,8 +4,8 @@ class GUI:
     def __init__(self):
         # Setup
         pygame.init()
-        self._SCREEN_WIDTH = 800
-        self._SCREEN_HEIGHT = 600
+        self._SCREEN_WIDTH = 1920
+        self._SCREEN_HEIGHT = 1080
         self._screen = pygame.display.set_mode((self._SCREEN_WIDTH, self._SCREEN_HEIGHT))
         pygame.display.set_caption("Seal Strike - Main Menu")
         self._player_name = "None"
@@ -63,7 +63,10 @@ class GUI:
 
     def name_input_screen(self):
         # Input box setup
-        input_box = pygame.Rect(300, 250, 200, 50)
+        box_x = (self._SCREEN_WIDTH - 200) // 2
+        box_y = int(self._SCREEN_HEIGHT * 0.5) - (50 // 2)
+        
+        input_box = pygame.Rect(box_x, box_y, 200, 50)
         color_inactive = pygame.Color('lightskyblue3')
         color_active = pygame.Color('dodgerblue2')
         color = color_inactive
