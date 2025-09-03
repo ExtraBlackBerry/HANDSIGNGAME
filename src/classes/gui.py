@@ -46,82 +46,70 @@ class GUI:
         text_rect = text.get_rect(center=rect.center)
         surface.blit(text, text_rect)
             
-    def input_box(self, rect, font, prompt="Enter Text", color_inactive=None, color_active=None):
-        # Allow other colors to be passed in
-        if color_inactive is None:
-            color_inactive = pygame.Color('lightskyblue3')
-        if color_active is None:
-            color_active = pygame.Color('dodgerblue2')
-        color = color_inactive
+    def draw_input_box(self, rect, colour, font, text, active):
+        # Input Box Setup
+        max_width = rect.width - 10
+        txt_surface = font.render(text, True, colour)
+        pygame.draw.rect(self._screen, colour, rect, 2)
         
-        text = ''
+        if txt_surface.get_width() > max_width: # Text too long, crop to rightmost part
+            offset = txt_surface.get_width() - max_width
+            cropped_surface = txt_surface.subsurface((offset, 0, max_width, txt_surface.get_height()))
+            text_rect = cropped_surface.get_rect(center=rect.center)
+            self._screen.blit(cropped_surface, text_rect)
+        else: # Text fits, draw normally
+            text_rect = txt_surface.get_rect(center=rect.center)
+            self._screen.blit(txt_surface, text_rect)
+
+    def name_input_screen(self):
+        # Input box setup
+        input_box = pygame.Rect(300, 250, 200, 50)
+        color_inactive = pygame.Color('lightskyblue3')
+        color_active = pygame.Color('dodgerblue2')
+        color = color_inactive
+        name = ''
+        font = pygame.font.Font(None, 36)
+        
+        # Logo setup
+        logo_image = pygame.image.load('assets/logo.png')
+        logo_image = pygame.transform.scale(logo_image, (167, 114))
+        logo_rect = logo_image.get_rect(center=(self._SCREEN_WIDTH//2, 130))
+        
+        # Subtitle setup
+        subtitle_text = font.render("Set Name", True, self._COLOR_TEXT)
+        subtitle_rect = subtitle_text.get_rect(center=(input_box.centerx, input_box.top - 25))
+        
+        # Input loop
         active = False
         done = False
-
-        # Subtitle
-        subtitle_text = font.render(prompt, True, self._COLOR_TEXT)
-        subtitle_rect = subtitle_text.get_rect(center=(rect.centerx, rect.top - 25))
-
         while not done:
-            # Poll events
             for event in pygame.event.get():
-                if event.type == pygame.QUIT: # Quit event
+                if event.type == pygame.QUIT:
                     pygame.quit()
                     return None
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if rect.collidepoint(event.pos): # Set active if clicked in box
+                    if input_box.collidepoint(event.pos): # Toggle active if clicked in box
                         active = not active
-                    else:                            # If click outside box, deactivate
-                        active = False 
+                    else: # Deactivate if clicked outside box
+                        active = False
                     color = color_active if active else color_inactive
                     
-                if event.type == pygame.KEYDOWN and active:
-                    if event.key == pygame.K_RETURN:      # Enter Text
-                        done = True
-                    elif event.key == pygame.K_BACKSPACE: # Backspace
-                        text = text[:-1]
-                    else:                                 # Add character to text
-                        text += event.unicode
+                if event.type == pygame.KEYDOWN:
+                    if active:
+                        if event.key == pygame.K_RETURN:      # Enter Text
+                            done = True
+                        elif event.key == pygame.K_BACKSPACE: # Delete last char
+                            name = name[:-1]
+                        else:                                 # Add char to text
+                            name += event.unicode
 
             self._screen.fill(self._COLOR_BACKGROUND) # Clear frame
             
             # Rendering
-            pygame.draw.rect(self._screen, color, rect, 2)
-            max_width = rect.width - 10 # Dont let text exceed box width
-            txt_surface = font.render(text, True, color)
-            
-            if txt_surface.get_width() > max_width: # Show rightmost part of text if too long
-                offset = txt_surface.get_width() - max_width
-                cropped_surface = txt_surface.subsurface((offset, 0, max_width, txt_surface.get_height()))
-                text_rect = cropped_surface.get_rect(center=rect.center)
-                self._screen.blit(cropped_surface, text_rect)
-            else:                                   # Text fits in box, draw normally
-                text_rect = txt_surface.get_rect(center=rect.center)
-                self._screen.blit(txt_surface, text_rect)
-                
+            self._screen.blit(logo_image, logo_rect)
             self._screen.blit(subtitle_text, subtitle_rect)
+            self.draw_input_box(input_box, color, font, name, active)
             
-            pygame.display.flip() # Update Frame
-        return text
-        
-    def name_input_screen(self):
-        # Input Box Setup
-        input_rect = pygame.Rect(300, 250, 200, 50)
-
-        # Logo Setup
-        logo_image = pygame.image.load('assets/logo.png')
-        logo_image = pygame.transform.scale(logo_image, (167, 114))
-        logo_rect = logo_image.get_rect(center=(self._SCREEN_WIDTH//2, 130))
-
-        # Input Loop
-        done = False
-        name = None
-        while not done:
-            # Get name
-            name = self.input_box(input_rect, self._button_font, prompt="Set Name")
-            done = True
-
-            self._screen.blit(logo_image, logo_rect) # Draw logo
             pygame.display.flip() # Update Frame
 
         return name
