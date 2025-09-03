@@ -115,6 +115,7 @@ class GUI:
         return name
 
     def host_screen(self):
+
         # Popup setup
         popup_width, popup_height = 400, 250
         popup_x = (self._SCREEN_WIDTH - popup_width) // 2
