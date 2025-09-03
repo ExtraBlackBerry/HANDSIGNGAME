@@ -9,7 +9,10 @@ class GUI:
         self._screen = pygame.display.set_mode((self._SCREEN_WIDTH, self._SCREEN_HEIGHT))
         pygame.display.set_caption("Seal Strike - Main Menu")
         self._player_name = "None"
+        
+        # Host screen
         self._host_screen_open = False
+        self._host_network_func1 = None
 
         # Colours
         self._COLOR_BACKGROUND = (34,30,32,255)
@@ -118,23 +121,39 @@ class GUI:
         return name
 
     def host_screen(self):
+        # Host network function call
+        if self._host_network_func1 is not None:
+            self._host_network_func1()
+        
         # Popup setup
         popup_width, popup_height = 400, 250
         popup_x = (self._SCREEN_WIDTH - popup_width) // 2
         popup_y = (self._SCREEN_HEIGHT - popup_height) // 2
         popup_rect = pygame.Rect(popup_x, popup_y, popup_width, popup_height)
-
+        
         pygame.draw.rect(self._screen, (220, 220, 220), popup_rect) # Draw bg
-        # pygame.draw.rect(self._screen, (80, 80, 80), popup_rect, 3) # Draw border
 
-        # Title 
+        # Exit button setup
+        x_size = 30
+        x_center = popup_rect.right - x_size // 2 - 10
+        y_center = popup_rect.top + x_size // 2 + 10
+        
+        # Draw X button
+        self.draw_button(self._screen,"X",(x_center, y_center),x_size,x_size,(180, 50, 50),(255, 255, 255),pygame.font.SysFont('Arial', 24),border_radius=8)
+        x_rect = pygame.Rect(0, 0, x_size, x_size)
+        x_rect.center = (x_center, y_center)
+
+        # Title
         popup_font = pygame.font.SysFont('Arial', 32)
         popup_text = popup_font.render("Host Game", True, (0, 0, 0))
         popup_text_rect = popup_text.get_rect(center=(popup_rect.centerx, popup_rect.top + 40))
-        self._screen.blit(popup_text, popup_text_rect) # Draw title
-        
-        # Server Name Input
-        input_box = pygame.Rect(popup_rect.left + 50, popup_rect.top + 80, 300, 40)
+        self._screen.blit(popup_text, popup_text_rect)
+
+        # Input poll
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if x_rect.collidepoint(event.pos):
+                    self._host_screen_open = False
     
     def join_screen(self):
         # Needs to go to play screen after joining host
@@ -186,17 +205,18 @@ class GUI:
                     running = False
                 # Button Events
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    mouse_pos = event.pos
-                    # Check if mouse is over any buttons
-                    if host_button_rect.collidepoint(mouse_pos):
-                        # TODO: Link host screen
-                        print("Link host screen here")
-                        self._host_screen_open = True
-                    if join_button_rect.collidepoint(mouse_pos):
-                        # TODO: Link join screen
-                        print("Link join screen here")
-                    if exit_button_rect.collidepoint(mouse_pos):
-                        running = False
+                    if not self._host_screen_open: # Only check buttons if host popup not open
+                        mouse_pos = event.pos
+                        # Check if mouse is over any buttons
+                        if host_button_rect.collidepoint(mouse_pos):
+                            # TODO: Link host screen
+                            print("Link host screen here")
+                            self._host_screen_open = True
+                        if join_button_rect.collidepoint(mouse_pos):
+                            # TODO: Link join screen
+                            print("Link join screen here")
+                        if exit_button_rect.collidepoint(mouse_pos):
+                            running = False
                     
             self._screen.fill(self._COLOR_BACKGROUND) # Clear frame
             
