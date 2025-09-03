@@ -85,9 +85,16 @@ class NetPeer:
 def _on_message(msg):
     print(f"Received message: {msg}")
 
+
+
 if __name__ == "__main__":
     _network = NetPeer()
     _network.on_message = _on_message
-    _network.host(5678)
-    _network.send({"type":"greeting", "content":"Hello, World!"})
+    _network.join('25.10.84.108', 5678)
+    while True:
+        text = input()
+        _network.send({"type":"message", "content":text})
+        if text == "exit":
+            break
+    #
     _network.close()
