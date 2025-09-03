@@ -7,12 +7,14 @@ class GUI:
         self._SCREEN_WIDTH = 1280
         self._SCREEN_HEIGHT = 780
         self._screen = pygame.display.set_mode((self._SCREEN_WIDTH, self._SCREEN_HEIGHT))
-        pygame.display.set_caption("Seal Strike - Main Menu")
+        pygame.display.set_caption("Seal Strike")
         self._player_name = "None"
         
         # Host screen
+        self._currently_hosting = False
         self._host_screen_open = False
-        self._host_network_func1 = None
+        self._network_host_function = lambda: None
+        self._network_close_function = lambda: None
 
         # Colours
         self._COLOR_BACKGROUND = (34,30,32,255)
@@ -23,7 +25,7 @@ class GUI:
         self._COLOR_HEALTH_BAR= (255, 0, 0)
 
         # Fonts TODO: Get ttf file for fonts
-        self._button_font = pygame.font.SysFont('Arial', 30)
+        self._font = pygame.font.SysFont('Arial', 30)
         
     def draw_button(self, surface, text, pos, width, height, colour, text_colour, font, border_radius=15):
         # Button Rectangle
@@ -119,10 +121,6 @@ class GUI:
         return name
 
     def host_screen(self):
-        # Host network function call
-        if self._host_network_func1 is not None:
-            self._host_network_func1()
-        
         # Popup setup
         popup_width, popup_height = 400, 250
         popup_x = (self._SCREEN_WIDTH - popup_width) // 2
@@ -137,16 +135,19 @@ class GUI:
         y_center = popup_rect.top + x_size // 2 + 10
         
         # Draw X button
-        self.draw_button(self._screen,"X",(x_center, y_center),x_size,x_size,(180, 50, 50),(255, 255, 255),pygame.font.SysFont('Arial', 24),border_radius=8)
+        self.draw_button(self._screen,"X",(x_center, y_center),x_size,x_size,(180, 50, 50),'white',pygame.font.SysFont('Arial', 24),border_radius=8)
         x_rect = pygame.Rect(0, 0, x_size, x_size)
         x_rect.center = (x_center, y_center)
 
         # Title
         popup_font = pygame.font.SysFont('Arial', 32)
-        popup_text = popup_font.render("Host Game", True, (0, 0, 0))
+        popup_text = popup_font.render("Host Game", True, 'black')
         popup_text_rect = popup_text.get_rect(center=(popup_rect.centerx, popup_rect.top + 40))
         self._screen.blit(popup_text, popup_text_rect)
-        
+
+        # TODO: Player List
+        # TODO: Start game button
+
         return x_rect # Passing out to handle click in main menu event loop
     
     def join_screen(self):
@@ -163,8 +164,6 @@ class GUI:
         if not pygame.get_init():
             pygame.init()
             
-        clock = pygame.time.Clock()
-        delta_time = 0
         running = True
         host_x_button = None
         
@@ -205,8 +204,12 @@ class GUI:
                         # Check if mouse is over any buttons
                         if host_button_rect.collidepoint(mouse_pos):
                             # TODO: Link host screen
-                            print("Link host screen here")
-                            self._host_screen_open = True
+                            if not self._currently_hosting:
+                                self._network_host_function()
+                                self._currently_hosting = True
+                                self._host_screen_open = True
+                            else:
+                                print("Already hosting a game") # TODO: Make this a popup
                         if join_button_rect.collidepoint(mouse_pos):
                             # TODO: Link join screen
                             print("Link join screen here")
@@ -214,7 +217,9 @@ class GUI:
                             running = False
                     else:
                         if host_x_button and host_x_button.collidepoint(mouse_pos): # Host Popup X Button
+                            self._network_close_function()
                             self._host_screen_open = False
+                            self._currently_hosting = False
 
             self._screen.fill(self._COLOR_BACKGROUND) # Clear frame
             
@@ -223,14 +228,14 @@ class GUI:
             self._screen.blit(logo_image, logo_rect)
             
             # Buttons
-            self.draw_button(self._screen, "HOST", host_button_rect.center, button_width, button_height, self._COLOR_BUTTON, self._COLOR_TEXT, self._button_font)
-            self.draw_button(self._screen, "JOIN", join_button_rect.center, button_width, button_height, self._COLOR_BUTTON, self._COLOR_TEXT, self._button_font)
-            self.draw_button(self._screen, "EXIT", exit_button_rect.center, button_width, button_height, self._COLOR_BUTTON, self._COLOR_TEXT, self._button_font)
+            self.draw_button(self._screen, "HOST", host_button_rect.center, button_width, button_height, self._COLOR_BUTTON, self._COLOR_TEXT, self._font)
+            self.draw_button(self._screen, "JOIN", join_button_rect.center, button_width, button_height, self._COLOR_BUTTON, self._COLOR_TEXT, self._font)
+            self.draw_button(self._screen, "EXIT", exit_button_rect.center, button_width, button_height, self._COLOR_BUTTON, self._COLOR_TEXT, self._font)
             
             # Name display box
             pygame.draw.rect(self._screen, (112,240,245,255), name_box_rect)
             max_name_width = name_box_width - 10
-            name_text_surface = self._button_font.render(player_name, True, self._COLOR_TEXT)
+            name_text_surface = self._font.render(player_name, True, self._COLOR_TEXT)
             if name_text_surface.get_width() > max_name_width: # Crop if too long
                 # Cropped to leftmost part
                 cropped_surface = name_text_surface.subsurface((0, 0, max_name_width, name_text_surface.get_height()))
@@ -253,13 +258,17 @@ class GUI:
             # if keys[pygame.K_w]: # Example w key
             
             pygame.display.flip() # Update Frame
-            delta_time = clock.tick(60) / 1000
 
         pygame.quit()
     
 
 if __name__ == "__main__":
+    from network import NetPeer
+    network = NetPeer()
     gui = GUI()
+    gui._network_host_function = network.host
+    gui._network_close_function = network.close
+    
     player_name = gui.name_input_screen()
     # Annoying check
     if player_name is None:
