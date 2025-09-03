@@ -25,8 +25,6 @@ class GUI:
         # Fonts TODO: Get ttf file for fonts
         self._button_font = pygame.font.SysFont('Arial', 30)
         
-        self._host_popup_open = False
-        
     def draw_button(self, surface, text, pos, width, height, colour, text_colour, font, border_radius=15):
         # Button Rectangle
         rect = pygame.Rect(0, 0, width, height)
@@ -148,12 +146,8 @@ class GUI:
         popup_text = popup_font.render("Host Game", True, (0, 0, 0))
         popup_text_rect = popup_text.get_rect(center=(popup_rect.centerx, popup_rect.top + 40))
         self._screen.blit(popup_text, popup_text_rect)
-
-        # Input poll
-        for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if x_rect.collidepoint(event.pos):
-                    self._host_screen_open = False
+        
+        return x_rect # Passing out to handle click in main menu event loop
     
     def join_screen(self):
         # Needs to go to play screen after joining host
@@ -172,6 +166,7 @@ class GUI:
         clock = pygame.time.Clock()
         delta_time = 0
         running = True
+        host_x_button = None
         
         # Logo
         logo_image = pygame.image.load('assets/logo.png')
@@ -205,8 +200,8 @@ class GUI:
                     running = False
                 # Button Events
                 if event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_pos = event.pos
                     if not self._host_screen_open: # Only check buttons if host popup not open
-                        mouse_pos = event.pos
                         # Check if mouse is over any buttons
                         if host_button_rect.collidepoint(mouse_pos):
                             # TODO: Link host screen
@@ -217,7 +212,10 @@ class GUI:
                             print("Link join screen here")
                         if exit_button_rect.collidepoint(mouse_pos):
                             running = False
-                    
+                    else:
+                        if host_x_button and host_x_button.collidepoint(mouse_pos): # Host Popup X Button
+                            self._host_screen_open = False
+
             self._screen.fill(self._COLOR_BACKGROUND) # Clear frame
             
             # === Rendering ===
@@ -242,14 +240,13 @@ class GUI:
                 name_text_rect = name_text_surface.get_rect(center=name_box_rect.center)
                 self._screen.blit(name_text_surface, name_text_rect)
                 
-            # If host popup is open grey out menu
-            # semi transparent overlay
+            # Host popup
             if self._host_screen_open:
                 overlay = pygame.Surface((self._SCREEN_WIDTH, self._SCREEN_HEIGHT))
                 overlay.set_alpha(128)
                 overlay.fill((50, 50, 50))
                 self._screen.blit(overlay, (0, 0))
-                self.host_screen()
+                host_x_button = self.host_screen() # Draw host screen and get X button rect
             
             # === Controls ===
             keys = pygame.key.get_pressed()
