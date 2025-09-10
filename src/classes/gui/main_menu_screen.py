@@ -57,6 +57,7 @@ class MainMenu:
     def show(self):
         
         self._screen.fill((34,30,32))
+        pygame.display.set_caption("Main Menu")
                 
         # Update buttons
         for button in self._buttons:

@@ -26,6 +26,7 @@ class LoginScreen:
 
     def show(self):
         self._screen.fill((34,30,32))
+        pygame.display.set_caption("Login")
         
         # Draw input box
         self._name_input_box.show(self._screen)

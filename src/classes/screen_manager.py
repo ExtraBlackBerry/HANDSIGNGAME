@@ -35,7 +35,7 @@ class ScreenManager:
                         continue
                 
                 # Main menu event handling
-                if isinstance(self._current_screen, MainMenu):
+                elif isinstance(self._current_screen, MainMenu):
                     # Handle buttons
                     result = self._current_screen.handle_event(event)
                     if result == "Host":
@@ -46,7 +46,7 @@ class ScreenManager:
                         self._running = False
                         
                 # Host screen event handling
-                if isinstance(self._current_screen, HostScreen):
+                elif isinstance(self._current_screen, HostScreen):
                     result = self._current_screen.handle_event(event)
                     # Check if game can be started
                     if self._current_screen._joined_name is not None:

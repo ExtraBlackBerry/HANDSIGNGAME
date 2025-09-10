@@ -63,6 +63,7 @@ class HostScreen:
 
     def show(self):
         self._screen.fill((34,30,32))
+        pygame.display.set_caption("Host Screen")
         # draw logo
         self._screen.blit(self._logo_image, self._logo_rect)
         # Black transparent overlay
