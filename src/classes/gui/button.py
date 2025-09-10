@@ -35,6 +35,7 @@ class Button:
         pygame.draw.rect(screen, self._current_colour, self._button_rect, border_radius=8)
         # Draw text
         text_rect = self._text_surface.get_rect(center=self._button_rect.center)
+        text_rect.y += 2 # lower text slightly
         screen.blit(self._text_surface, text_rect)
         
     def is_hovered(self, mouse_pos):
