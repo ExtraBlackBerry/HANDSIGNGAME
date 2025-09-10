@@ -2,6 +2,7 @@ from gui.host_screen import HostScreen
 from gui.main_menu_screen import MainMenu
 from gui.login_screen import LoginScreen
 from gui.join_screen import JoinScreen
+from gui.joined_screen import JoinedScreen
 import pygame
 
 class ScreenManager:
@@ -9,7 +10,9 @@ class ScreenManager:
         pygame.init()
         self._screen = pygame.display.set_mode((1280, 720))
         self._player_name = "none"
-        self._current_screen = LoginScreen(self._screen)
+        #self._current_screen = LoginScreen(self._screen)
+        # Test Joined Screen
+        self._current_screen = JoinedScreen(self._screen, "TestPlayer")
         self._running = True
         self._game_ready = False # TODO: Set to true when enough players have joined
         
