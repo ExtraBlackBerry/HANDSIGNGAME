@@ -10,9 +10,7 @@ class ScreenManager:
         pygame.init()
         self._screen = pygame.display.set_mode((1280, 720))
         self._player_name = "none"
-        #self._current_screen = LoginScreen(self._screen)
-        # Test Joined Screen
-        self._current_screen = JoinedScreen(self._screen, "TestPlayer")
+        self._current_screen = LoginScreen(self._screen)
         self._running = True
         self._game_ready = False # TODO: Set to true when enough players have joined
         
@@ -20,6 +18,7 @@ class ScreenManager:
         self._network_host_function = lambda: None
         self._network_join_function = lambda ip, port=5678: None
         self._network_close_function = lambda: None
+        self._network_send_function = lambda obj: None
         
     def run(self):
         # Main loop
@@ -75,8 +74,7 @@ class ScreenManager:
                         self._network_close_function()
                         self._current_screen = MainMenu(self._screen, self._player_name)
                     elif result == "Joined":
-                        # TODO: Transition to 'waiting for host to start' screen
-                        print("Link waiting for host to start here - Not implemented")
+                        self._current_screen = JoinedScreen(self._screen, self._player_name)
                     elif result == "JoinFailed":
                         print("Join failed, stay on join screen")
                         
@@ -92,4 +90,5 @@ if __name__ == "__main__":
     manager._network_close_function = network.close
     manager._network_host_function = network.host
     manager._network_join_function = network.join
+    manager._network_send_function = network.send
     manager.run()
