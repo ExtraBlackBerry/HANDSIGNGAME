@@ -1,4 +1,4 @@
-from gui.main_menu import MainMenu
+from classes.gui.main_menu_screen import MainMenu
 import pygame
 
 class ScreenManager:
