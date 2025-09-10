@@ -4,19 +4,39 @@ from .button import Button
 class MainMenu:
     def __init__(self, screen, player_name):
         self._screen = screen
+        self._screen_name = "MainMenu"
+        self._player_name = player_name
         self._font = pygame.font.Font(None,40)
         self._button_font = pygame.font.Font(None,36)
         self._button_spacing = 70
         self._buttons = [
-            # 0: Host button
-            Button("Host", (self._screen.get_width()//2 - 100, self._screen.get_height()//2), 
-                200, 50, "Host Game", self._button_font, 'gray', (100, 100, 100))
-            # 1: Join button
-            ,Button("Join", (self._screen.get_width()//2 - 100, self._screen.get_height()//2 + self._button_spacing),
-                200, 50, "Join Game", self._button_font, 'gray', (100, 100, 100))
-            # 2: Exit button
-            ,Button("Exit", (self._screen.get_width()//2 - 100, self._screen.get_height()//2 + 2*self._button_spacing),
-                200, 50, "Exit", self._button_font, 'gray', (100, 100, 100))
+            # Host button
+            Button(
+                button_name="Host",
+                pos=(self._screen.get_width()//2 - 100, self._screen.get_height()//2),
+                width=200, height=50,
+                display_text="Host Game",
+                font=self._button_font,
+                base_colour='gray', hover_colour=(100, 100, 100)
+            ),
+            # Join button
+            Button(
+                button_name="Join",
+                pos=(self._screen.get_width()//2 - 100, self._screen.get_height()//2 + self._button_spacing),
+                width=200, height=50,
+                display_text="Join Game",
+                font=self._button_font,
+                base_colour='gray', hover_colour=(100, 100, 100)
+            ),
+            # Exit button
+            Button(
+                button_name="Exit",
+                pos=(self._screen.get_width()//2 - 100, self._screen.get_height()//2 + (self._button_spacing * 2)),
+                width=200, height=50,
+                display_text="Exit",
+                font=self._button_font,
+                base_colour='gray', hover_colour=(100, 100, 100)
+            )
         ]
         # Logo
         self._logo_image = pygame.image.load('assets/logo.png')
@@ -29,8 +49,7 @@ class MainMenu:
         self._name_box_x = self._screen.get_width() - self._name_box_width
         self._name_box_y = self._screen.get_height() - self._name_box_height - 20
         self._name_box_rect = pygame.Rect(self._name_box_x, self._name_box_y, self._name_box_width, self._name_box_height)
-        self._name_max_width = self._name_box_width - 10
-        self._name_box_text_surface = self._font.render(player_name, True, 'white')
+        self._name_box_text_surface = self._font.render(self._player_name, True, 'white')
         self._name_box_rect = pygame.Rect(self._name_box_x, self._name_box_y, self._name_box_width, self._name_box_height)
         self._name_box_text_rect = self._name_box_text_surface.get_rect(center=self._name_box_rect.center)
 
@@ -49,10 +68,12 @@ class MainMenu:
         # Draw name box
         pygame.draw.rect(self._screen, self._name_box_colour, self._name_box_rect)
         # Crop name text to left most part if too wide for box
-        if self._name_box_text_surface.get_width() > self._name_max_width:
-            cropped_surface = self._name_box_text_surface.subsurface((0, 0, self._name_max_width, self._name_box_text_surface.get_height()))
+        if self._name_box_text_surface.get_width() > self._name_box_width - 10:
+            cropped_surface = self._name_box_text_surface.subsurface((0, 0, self._name_box_width - 10, self._name_box_text_surface.get_height()))
             self._name_box_text_rect = cropped_surface.get_rect(center=self._name_box_text_rect.center)
-        self._screen.blit(self._name_box_text_surface, self._name_box_text_rect)
+            self._screen.blit(cropped_surface, self._name_box_text_rect)
+        else:
+            self._screen.blit(self._name_box_text_surface, self._name_box_text_rect)
 
             
         
