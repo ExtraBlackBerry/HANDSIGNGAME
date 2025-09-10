@@ -3,7 +3,8 @@ import pygame
 class Button:
     def __init__(self, button_name , pos, width, height, display_text, font, base_colour, hover_colour):
         """ Create a button. Able to change colour on hover and check for clicks.  
-        Handle click logic in class that creates the button.
+        Handle click logic in class that creates the button.  
+        Button display text will overflow if too long for button size.
 
         Args:
             button_name (str): Identifier for the button
@@ -15,7 +16,7 @@ class Button:
             base_colour (tuple): Colour of button when not hovered
             hover_colour (tuple): Colour of button when hovered
         """
-        # Button setup (pos is top left corner)
+        # Button setup
         self._button_name = button_name # Need an identifier for the button
         self._x_pos = pos[0]
         self._y_pos = pos[1]
