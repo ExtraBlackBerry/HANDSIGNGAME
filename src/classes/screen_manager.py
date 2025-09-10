@@ -65,6 +65,18 @@ class ScreenManager:
                         self._network_close_function()
                         self._current_screen = MainMenu(self._screen, self._player_name)
         
+                # Join screen event handling
+                elif isinstance(self._current_screen, JoinScreen):
+                    result = self._current_screen.handle_event(event)
+                    if result == "Close":
+                        self._network_close_function()
+                        self._current_screen = MainMenu(self._screen, self._player_name)
+                    elif result == "Joined":
+                        # TODO: Transition to 'waiting for host to start' screen
+                        print("Link waiting for host to start here - Not implemented")
+                    elif result == "JoinFailed":
+                        print("Join failed, stay on join screen")
+                        
             # Display
             self._current_screen.show()
             pygame.display.flip()
