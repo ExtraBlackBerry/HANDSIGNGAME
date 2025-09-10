@@ -43,6 +43,19 @@ class HostScreen:
                 base_colour='red', hover_colour=(200, 0, 0)
             )
         ]
+        # Host name display box
+        # Center host box horizontally in the popup
+        self._host_box_width, self._host_box_height = 300, 50
+        self._host_box_x = self._popup_x + (self._popup_width - self._host_box_width) // 2
+        self._host_box_y = self._popup_y + 70
+        self._host_box_rect = pygame.Rect(self._host_box_x, self._host_box_y, self._host_box_width, self._host_box_height)
+        self._host_box_text_surface = self._font.render(self._host_name, True, 'black')
+        # Joined player display box
+        self._joined_box_width, self._joined_box_height = 300, 50
+        self._joined_box_x = self._popup_x + (self._popup_width - self._joined_box_width) // 2
+        self._joined_box_y = self._popup_y + 130
+        self._joined_box_rect = pygame.Rect(self._joined_box_x, self._joined_box_y, self._joined_box_width, self._joined_box_height)
+        self._joined_box_text_surface = self._font.render(self._joined_name if self._joined_name else "OPEN SLOT", True, 'black')
         
         # Open socket right away
         # Should only close when quitting game or going back to main menu
@@ -66,25 +79,20 @@ class HostScreen:
             button.show(self._screen)
             button.is_hovered(pygame.mouse.get_pos())
         
-        # Host player box
-        host_box = pygame.Rect(self._popup_x + 40, self._popup_y + 80, 140, 50)
-        pygame.draw.rect(self._screen, (200, 230, 200), host_box, border_radius=8)
-        host_text = self._font.render(f"Host: {self._host_name}", True, "black")
-        self._screen.blit(host_text, host_box.move(10, 10))
+        # Display host name
+        pygame.draw.rect(self._screen, 'white', self._host_box_rect, border_radius=5)
+        host_text_rect = self._host_box_text_surface.get_rect(center=self._host_box_rect.center)
+        self._screen.blit(self._host_box_text_surface, host_text_rect)
 
-        # Join slot box
-        join_box = pygame.Rect(self._popup_x + 220, self._popup_y + 80, 140, 50)
-        pygame.draw.rect(self._screen, (230, 200, 200), join_box, border_radius=8)
-        if self._joined_name:
-            join_text = self._font.render(f"Player: {self._joined_name}", True, "black")
-        else:
-            join_text = self._font.render("Open Slot", True, "gray")
-        self._screen.blit(join_text, join_box.move(10, 10))
+        # Display joined player name or waiting message
+        pygame.draw.rect(self._screen, 'white', self._joined_box_rect, border_radius=5)
+        joined_text_rect = self._joined_box_text_surface.get_rect(center=self._joined_box_rect.center)
+        self._screen.blit(self._joined_box_text_surface, joined_text_rect)
 
         # Status
         status = "Waiting for player..." if not self._joined_name else "Ready!"
-        status_text = self._font.render(status, True, "blue")
-        self._screen.blit(status_text, (self._popup_x + 100, self._popup_y + 160))
+        status_text = self._font.render(status, True, "black")
+        self._screen.blit(status_text, (self._popup_x + 100, self._popup_y + 30))
 
     def handle_event(self, event):
         # Buttons
