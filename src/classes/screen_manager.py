@@ -1,6 +1,7 @@
 from gui.host_screen import HostScreen
 from gui.main_menu_screen import MainMenu
 from gui.login_screen import LoginScreen
+from gui.join_screen import JoinScreen
 import pygame
 
 class ScreenManager:
@@ -14,7 +15,7 @@ class ScreenManager:
         
         # Network function slots
         self._network_host_function = lambda: None
-        self._network_join_function = lambda: None
+        self._network_join_function = lambda ip, port=5678: None
         self._network_close_function = lambda: None
         
     def run(self):
@@ -41,7 +42,7 @@ class ScreenManager:
                     if result == "Host":
                         self._current_screen = HostScreen(self._screen, self._network_host_function, self._network_close_function, self._player_name)
                     elif result == "Join":
-                        print("Switch to Join Screen")
+                        self._current_screen = JoinScreen(self._screen, self._network_join_function, self._player_name)
                     elif result == "Exit":
                         self._running = False
                         
@@ -75,4 +76,5 @@ if __name__ == "__main__":
     manager = ScreenManager()
     manager._network_close_function = network.close
     manager._network_host_function = network.host
+    manager._network_join_function = network.join
     manager.run()
