@@ -1,11 +1,93 @@
 import pygame
+from .button import Button
 
 class HostScreen:
-    def __init__(self, screen):
-        pass
+    def __init__(self, screen, host_function, close_function, host_name, joined_name=None):
+        self._screen = screen
+        self._screen_name = "HostScreen"
+        self._font = pygame.font.Font(None, 30)
+        self._host_name = host_name
+        self._joined_name = joined_name
+        
+        # Network functions
+        self._host_function = host_function
+        self._close_function = close_function
+        
+        # Logo
+        self._logo_image = pygame.image.load('assets/logo.png')
+        self._logo_rect = self._logo_image.get_rect(center=(self._screen.get_width()//2, 130))
+        
+        # Popup
+        self._popup_width, self._popup_height = 400, 250
+        self._popup_x = (self._screen.get_width() - self._popup_width) // 2
+        self._popup_y = (self._screen.get_height() - self._popup_height) // 2
+        self._popup_rect = pygame.Rect(self._popup_x, self._popup_y, self._popup_width, self._popup_height)
+        
+        self.buttons = [
+            # Start Game button
+            Button(
+                button_name="Start",
+                pos=(self._popup_x + (self._popup_width - 120)//2, self._popup_y + self._popup_height - 50),
+                width=120, height=40,
+                display_text="Start Game",
+                font=self._font,
+                base_colour=(150, 150, 150), hover_colour=(100, 100, 100)
+            ),
+            # Close button (small x top right of popup)
+            Button(
+                button_name="Close",
+                pos=(self._popup_x + self._popup_width - 40, self._popup_y + 10),
+                width=30, height=30,
+                display_text="X",
+                font=self._font,
+                base_colour='red', hover_colour=(200, 0, 0)
+            )
+        ]
+        
+        # Open socket right away
+        # Should only close when quitting game or going back to main menu
+        self._host_function()
+        self._is_hosting = True
 
     def show(self):
-        pass
+        self._screen.fill((34,30,32))
+        # draw logo
+        self._screen.blit(self._logo_image, self._logo_rect)
+        # Black transparent overlay
+        overlay = pygame.Surface((self._screen.get_width(), self._screen.get_height()), pygame.SRCALPHA)
+        overlay.fill((0, 0, 0, 100))
+        self._screen.blit(overlay, (0, 0))
+        
+        # Draw popup
+        pygame.draw.rect(self._screen, 'grey', self._popup_rect)
+        
+        # Update buttons
+        for button in self.buttons:
+            button.show(self._screen)
+            button.is_hovered(pygame.mouse.get_pos())
+        
+        # Host player box
+        host_box = pygame.Rect(self._popup_x + 40, self._popup_y + 80, 140, 50)
+        pygame.draw.rect(self._screen, (200, 230, 200), host_box, border_radius=8)
+        host_text = self._font.render(f"Host: {self._host_name}", True, "black")
+        self._screen.blit(host_text, host_box.move(10, 10))
+
+        # Join slot box
+        join_box = pygame.Rect(self._popup_x + 220, self._popup_y + 80, 140, 50)
+        pygame.draw.rect(self._screen, (230, 200, 200), join_box, border_radius=8)
+        if self._joined_name:
+            join_text = self._font.render(f"Player: {self._joined_name}", True, "black")
+        else:
+            join_text = self._font.render("Open Slot", True, "gray")
+        self._screen.blit(join_text, join_box.move(10, 10))
+
+        # Status
+        status = "Waiting for player..." if not self._joined_name else "Ready!"
+        status_text = self._font.render(status, True, "blue")
+        self._screen.blit(status_text, (self._popup_x + 100, self._popup_y + 160))
 
     def handle_event(self, event):
-        pass
+        # Buttons
+        for button in self.buttons:
+            if button.is_clicked(event):
+                return button._button_name
