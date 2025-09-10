@@ -7,35 +7,37 @@ class MainMenu:
         self._screen_name = "MainMenu"
         self._player_name = player_name
         self._font = pygame.font.Font(None,40)
-        self._button_font = pygame.font.Font(None,36)
-        self._button_spacing = 70
+        self._button_font = pygame.font.Font(None,60)
+        self._button_spacing = 120
+        self._button_width, self._button_height = 300, 80
+        
         self._buttons = [
             # Host button
             Button(
                 button_name="Host",
-                pos=(self._screen.get_width()//2 - 100, self._screen.get_height()//2),
-                width=200, height=50,
-                display_text="Host Game",
+                pos=(self._screen.get_width()//2 - self._button_width //2, self._screen.get_height()//2 - 85),
+                width=self._button_width, height=self._button_height,
+                display_text="Host",
                 font=self._button_font,
-                base_colour='gray', hover_colour=(100, 100, 100)
+                base_colour=(58, 51, 120), hover_colour=(38, 31, 100)
             ),
             # Join button
             Button(
                 button_name="Join",
-                pos=(self._screen.get_width()//2 - 100, self._screen.get_height()//2 + self._button_spacing),
-                width=200, height=50,
-                display_text="Join Game",
+                pos=(self._screen.get_width()//2 - self._button_width //2, self._screen.get_height()//2 - 85 + self._button_spacing),
+                width=self._button_width, height=self._button_height,
+                display_text="Join",
                 font=self._button_font,
-                base_colour='gray', hover_colour=(100, 100, 100)
+                base_colour=(58, 51, 120), hover_colour=(38, 31, 100)
             ),
             # Exit button
             Button(
                 button_name="Exit",
-                pos=(self._screen.get_width()//2 - 100, self._screen.get_height()//2 + (self._button_spacing * 2)),
-                width=200, height=50,
+                pos=(self._screen.get_width()//2 - self._button_width //2, self._screen.get_height()//2 - 85 + (self._button_spacing * 2)),
+                width=self._button_width, height=self._button_height,
                 display_text="Exit",
                 font=self._button_font,
-                base_colour='gray', hover_colour=(100, 100, 100)
+                base_colour=(58, 51, 120), hover_colour=(38, 31, 100)
             )
         ]
         # Logo
@@ -83,10 +85,5 @@ class MainMenu:
             # Just returning a string to indicate which button was pressed
             # to be handled in ScreenManager
             if button.is_clicked(event):
-                if button._button_name == "Host":
-                    return "host"
-                if button._button_name == "Join":
-                    return "join"
-                if button._button_name == "Exit":
-                    return "exit"
+                return button._button_name
         return None
