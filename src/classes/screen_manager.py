@@ -1,3 +1,4 @@
+from gui.host_screen import HostScreen
 from gui.main_menu_screen import MainMenu
 from gui.login_screen import LoginScreen
 import pygame
@@ -9,6 +10,12 @@ class ScreenManager:
         self._player_name = "none"
         self._current_screen = LoginScreen(self._screen)
         self._running = True
+        self._game_ready = False # TODO: Set to true when enough players have joined
+        
+        # Network function slots
+        self._network_host_function = lambda: None
+        self._network_join_function = lambda: None
+        self._network_close_function = lambda: None
         
     def run(self):
         # Main loop
@@ -31,12 +38,25 @@ class ScreenManager:
                 if self._current_screen._screen_name == "MainMenu":
                     # Handle buttons
                     result = self._current_screen.handle_event(event)
-                    if result == "host":
-                        print("Switch to Host Screen") # TODO: Replace with actual HostScreen
-                    if result == "join":
+                    if result == "Host":
+                        self._current_screen = HostScreen(self._screen, self._network_host_function, self._network_close_function, self._player_name)
+                    if result == "Join":
                         print("Switch to Join Screen")
-                    if result == "exit":
+                    if result == "Exit":
                         self._running = False
+                        
+                # Host screen event handling
+                if self._current_screen._screen_name == "HostScreen":
+                    result = self._current_screen.handle_event(event)
+                    # Close socket and return to main menu
+                    if result == "Close":
+                        self._network_close_function()
+                        self._current_screen = MainMenu(self._screen, self._player_name)
+                    if result == "Start" and self._game_ready:
+                        # TODO: Start game
+                        # Dont close host socket, just transition to game screen
+                        print("Start Game - Not implemented")
+                        pass
         
             # Display
             self._current_screen.show()
@@ -44,5 +64,9 @@ class ScreenManager:
         
 # Test code
 if __name__ == "__main__":
+    from network import NetPeer
+    network = NetPeer()
     manager = ScreenManager()
+    manager._network_close_function = network.close
+    manager._network_host_function = network.host
     manager.run()
