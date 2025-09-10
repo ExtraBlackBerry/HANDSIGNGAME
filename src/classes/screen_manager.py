@@ -56,7 +56,6 @@ class ScreenManager:
                         # TODO: Start game
                         # Dont close host socket, just transition to game screen
                         print("Start Game - Not implemented")
-                        pass
         
             # Display
             self._current_screen.show()
