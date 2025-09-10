@@ -4,7 +4,6 @@ from .button import Button
 class HostScreen:
     def __init__(self, screen, host_function, close_function, host_name, joined_name=None):
         self._screen = screen
-        self._screen_name = "HostScreen"
         self._font = pygame.font.Font(None, 30)
         self._host_name = host_name
         self._joined_name = joined_name

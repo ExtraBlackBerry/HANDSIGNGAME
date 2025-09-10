@@ -5,7 +5,6 @@ class LoginScreen:
     def __init__(self, screen):
         self._screen = screen
         self._font = pygame.font.Font(None, 40)
-        self._screen_name = "LoginScreen"
         
         # Input box for name
         self._name_input_box = InputBox(

@@ -4,7 +4,6 @@ from .button import Button
 class MainMenu:
     def __init__(self, screen, player_name):
         self._screen = screen
-        self._screen_name = "MainMenu"
         self._player_name = player_name
         self._font = pygame.font.Font(None,40)
         self._button_font = pygame.font.Font(None,60)

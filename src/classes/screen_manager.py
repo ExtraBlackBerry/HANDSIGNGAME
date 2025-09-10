@@ -26,7 +26,7 @@ class ScreenManager:
                     self._running = False
                 
                 # Login Screen event handling
-                if self._current_screen._screen_name == "LoginScreen":
+                if isinstance(self._current_screen, LoginScreen):
                     # Handle name input
                     name_result = self._current_screen.handle_event(event)
                     if name_result is not None and name_result.strip() != "":
@@ -35,27 +35,34 @@ class ScreenManager:
                         continue
                 
                 # Main menu event handling
-                if self._current_screen._screen_name == "MainMenu":
+                if isinstance(self._current_screen, MainMenu):
                     # Handle buttons
                     result = self._current_screen.handle_event(event)
                     if result == "Host":
                         self._current_screen = HostScreen(self._screen, self._network_host_function, self._network_close_function, self._player_name)
-                    if result == "Join":
+                    elif result == "Join":
                         print("Switch to Join Screen")
-                    if result == "Exit":
+                    elif result == "Exit":
                         self._running = False
                         
                 # Host screen event handling
-                if self._current_screen._screen_name == "HostScreen":
+                if isinstance(self._current_screen, HostScreen):
                     result = self._current_screen.handle_event(event)
-                    # Close socket and return to main menu
-                    if result == "Close":
-                        self._network_close_function()
-                        self._current_screen = MainMenu(self._screen, self._player_name)
+                    # Check if game can be started
+                    if self._current_screen._joined_name is not None:
+                        self._game_ready = True
+                    else:
+                        self._game_ready = False
+                        
                     if result == "Start" and self._game_ready:
                         # TODO: Start game
                         # Dont close host socket, just transition to game screen
                         print("Start Game - Not implemented")
+                        
+                    # Close socket and return to main menu
+                    elif result == "Close":
+                        self._network_close_function()
+                        self._current_screen = MainMenu(self._screen, self._player_name)
         
             # Display
             self._current_screen.show()
