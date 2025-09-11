@@ -2,11 +2,11 @@ import pygame
 from .button import Button
 
 class HostScreen:
-    def __init__(self, screen, host_function, close_function, host_name, joined_name=None):
+    def __init__(self, screen, host_function, close_function, host_name):
         self._screen = screen
         self._font = pygame.font.Font(None, 30)
         self._host_name = host_name
-        self._joined_name = joined_name
+        self._joined_name = None # TODO: Update when player joins
         
         # Network functions
         self._host_function = host_function
