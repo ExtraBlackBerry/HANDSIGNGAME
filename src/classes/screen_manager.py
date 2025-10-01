@@ -15,10 +15,11 @@ class ScreenManager:
         self._current_screen = LoginScreen(self._screen)
         self._running = True
         self._game_ready = False
+        self._network = None
         
         # Network function slots
         self._network_host_function = lambda: None
-        self._network_join_function = lambda ip, port=5678: None
+        self._network_join_function = lambda ip, port=8080: None
         self._network_close_function = lambda: None
         self._network_send_function = lambda obj: None
         self._network_receive_player2 = lambda: None
@@ -54,13 +55,16 @@ class ScreenManager:
                         
                 # Host screen event handling
                 elif isinstance(self._current_screen, HostScreen):
-                    joined_player = self._network_receive_player2()
+                    joined_player = network.player_join_event
                     if joined_player is not None and self.player1 is not None and self.player2 is None:
                         print(f"Player 2 joined: {joined_player}")
                         self.player2 = Player(joined_player)
                         self._current_screen._joined_player = self.player2
                         self._current_screen._joined_box_text_surface = self._current_screen._font.render(self.player2.name, True, 'black')
                         self._network_send_function({"type": "host_name", "content": self.player1.name})
+                        
+                        print("Sent host name to player 2")
+
                     # Check if game can be started
                     if self._current_screen._joined_player is not None:
                         self._game_ready = True
@@ -104,6 +108,7 @@ if __name__ == "__main__":
     from network import NetPeer
     network = NetPeer()
     manager = ScreenManager()
+    manager._network = network
     manager._network_close_function = network.close
     manager._network_host_function = network.host
     manager._network_join_function = network.join

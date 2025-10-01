@@ -10,7 +10,7 @@ class NetPeer:
         
         self.player_join_event = None
 
-    def host(self, port=5678):
+    def host(self, port=8080):
         host_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         host_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         host_sock.bind(('', port))
@@ -28,7 +28,7 @@ class NetPeer:
                 self.close()
         threading.Thread(target=accept_loop, daemon=True).start()
     
-    def join(self, ip, port=5678):
+    def join(self, ip, port=8080):
         client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         client.connect((ip, port))
         client.settimeout(0.1)
@@ -86,14 +86,12 @@ class NetPeer:
         match msg["type"]:
             case "join":
                 self.player_join_event = msg['content']
-                print("CHECK1")
             case "host_name":
                 print(f"Host name received: {msg['content']}")
             case _:
                 print(f"Unknown message type: {msg['type']}")
 
     def get_player_join_event(self):
-        print("CHECK2")
         if self.player_join_event is not None:
             event = self.player_join_event
             self.player_join_event = None
