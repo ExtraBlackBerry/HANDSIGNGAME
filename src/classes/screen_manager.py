@@ -79,6 +79,7 @@ class ScreenManager:
                     elif result == "Joined":
                         # If join was successful, go to waiting screen
                         self._current_screen = JoinedScreen(self._screen, self._player_name)
+                        self._network_send_function({"type": "join", "content": self._player_name})
                     elif result == "JoinFailed":
                         # TODO: Add error message display instead of just print
                         print("Join failed")

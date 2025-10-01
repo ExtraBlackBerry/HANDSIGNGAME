@@ -6,7 +6,6 @@ class NetPeer:
         self.connected = None
         self.alive = threading.Event()
         self.alive.set()
-        self.on_message = None
         self.lock = threading.Lock()
 
     def host(self, port=5678):
@@ -80,3 +79,11 @@ class NetPeer:
                 self.sock.close()
         except Exception as e:
             print(f"Error closing socket: {e}")
+
+    def _on_message(msg):
+        match msg["type"]:
+            case "join":
+                print(f"Player joined: {msg['content']}")
+            case _:
+                print(f"Unknown message type: {msg['type']}")
+
