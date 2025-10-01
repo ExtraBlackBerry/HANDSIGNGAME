@@ -58,9 +58,9 @@ class ScreenManager:
                     if joined_player is not None and self.player1 is not None and self.player2 is None:
                         print(f"Player 2 joined: {joined_player}")
                         self.player2 = Player(joined_player)
-                        self._current_screen._joined_player = Player(joined_player)
-                        self._current_screen._joined_box_text_surface = self._current_screen._font.render(self._current_screen._joined_player.name, True, 'black')
-                    
+                        self._current_screen._joined_player = self.player2
+                        self._current_screen._joined_box_text_surface = self._current_screen._font.render(self.player2.name, True, 'black')
+                        self._network_send_function({"type": "host_name", "content": self.player1.name})
                     # Check if game can be started
                     if self._current_screen._joined_player is not None:
                         self._game_ready = True
