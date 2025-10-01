@@ -2,11 +2,11 @@ import pygame
 from .button import Button
 
 class HostScreen:
-    def __init__(self, screen, host_function, close_function, host_name):
+    def __init__(self, screen, host_function, close_function, host_player):
         self._screen = screen
         self._font = pygame.font.Font(None, 30)
-        self._host_name = host_name
-        self._joined_name = None # TODO: Update when player joins
+        self._host_player = host_player
+        self._joined_player = None # TODO: Update when player joins
         
         # Network functions
         self._host_function = host_function
@@ -48,13 +48,13 @@ class HostScreen:
         self._host_box_x = self._popup_x + (self._popup_width - self._host_box_width) // 2
         self._host_box_y = self._popup_y + 70
         self._host_box_rect = pygame.Rect(self._host_box_x, self._host_box_y, self._host_box_width, self._host_box_height)
-        self._host_box_text_surface = self._font.render(self._host_name, True, 'black')
+        self._host_box_text_surface = self._font.render(self._host_player.name, True, 'black')
         # Joined player display box
         self._joined_box_width, self._joined_box_height = 300, 50
         self._joined_box_x = self._popup_x + (self._popup_width - self._joined_box_width) // 2
         self._joined_box_y = self._popup_y + 130
         self._joined_box_rect = pygame.Rect(self._joined_box_x, self._joined_box_y, self._joined_box_width, self._joined_box_height)
-        self._joined_box_text_surface = self._font.render(self._joined_name if self._joined_name else "OPEN SLOT", True, 'black')
+        self._joined_box_text_surface = self._font.render(self._joined_player if self._joined_player else "OPEN SLOT", True, 'black')
         
         # Open socket right away
         # Should only close when quitting game or going back to main menu
@@ -90,7 +90,7 @@ class HostScreen:
         self._screen.blit(self._joined_box_text_surface, joined_text_rect)
 
         # Status
-        status = "Waiting for player..." if not self._joined_name else "Ready!"
+        status = "Waiting for player..." if not self._joined_player else "Ready!"
         status_text = self._font.render(status, True, "black")
         self._screen.blit(status_text, (self._popup_x + 100, self._popup_y + 30))
 

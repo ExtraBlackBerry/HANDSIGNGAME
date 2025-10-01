@@ -4,11 +4,11 @@ from .button import Button
 from .input_box import InputBox
 
 class JoinScreen:
-    def __init__(self, screen, join_function, player_name):
+    def __init__(self, screen, join_function, player):
         self._screen = screen
         self._font = pygame.font.Font(None, 30)
         self._host_ip = None
-        self._player_name = player_name
+        self._player = player
         
         self._join_function = join_function
         

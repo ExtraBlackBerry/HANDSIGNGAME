@@ -2,9 +2,9 @@ import pygame
 from .button import Button
 
 class MainMenu:
-    def __init__(self, screen, player_name):
+    def __init__(self, screen, player):
         self._screen = screen
-        self._player_name = player_name
+        self._player = player
         self._font = pygame.font.Font(None,40)
         self._button_font = pygame.font.Font(None,60)
         self._button_spacing = 120
@@ -50,7 +50,7 @@ class MainMenu:
         self._name_box_x = self._screen.get_width() - self._name_box_width
         self._name_box_y = self._screen.get_height() - self._name_box_height - 20
         self._name_box_rect = pygame.Rect(self._name_box_x, self._name_box_y, self._name_box_width, self._name_box_height)
-        self._name_box_text_surface = self._font.render(self._player_name, True, 'white')
+        self._name_box_text_surface = self._font.render(self._player.name, True, 'white')
         self._name_box_rect = pygame.Rect(self._name_box_x, self._name_box_y, self._name_box_width, self._name_box_height)
         self._name_box_text_rect = self._name_box_text_surface.get_rect(center=self._name_box_rect.center)
 
