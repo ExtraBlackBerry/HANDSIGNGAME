@@ -80,7 +80,7 @@ class NetPeer:
         except Exception as e:
             print(f"Error closing socket: {e}")
 
-    def _on_message(msg):
+    def on_message(self, msg):
         match msg["type"]:
             case "join":
                 print(f"Player joined: {msg['content']}")
