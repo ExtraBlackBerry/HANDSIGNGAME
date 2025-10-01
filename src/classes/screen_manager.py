@@ -21,6 +21,7 @@ class ScreenManager:
         self._network_join_function = lambda ip, port=5678: None
         self._network_close_function = lambda: None
         self._network_send_function = lambda obj: None
+        self._network_receive_player2 = lambda: None
         
     def run(self):
         # Main loop
@@ -53,6 +54,13 @@ class ScreenManager:
                         
                 # Host screen event handling
                 elif isinstance(self._current_screen, HostScreen):
+                    joined_player = self._network_receive_player2()
+                    if joined_player is not None and self.player1 is not None and self.player2 is None:
+                        print(f"Player 2 joined: {joined_player}")
+                        self.player2 = Player(joined_player)
+                        self._current_screen._joined_player = Player(joined_player)
+                        self._current_screen._joined_box_text_surface = self._current_screen._font.render(self._current_screen._joined_player.name, True, 'black')
+                    
                     # Check if game can be started
                     if self._current_screen._joined_player is not None:
                         self._game_ready = True
@@ -100,4 +108,5 @@ if __name__ == "__main__":
     manager._network_host_function = network.host
     manager._network_join_function = network.join
     manager._network_send_function = network.send
+    manager._network_receive_player2 = network.get_player_join_event
     manager.run()

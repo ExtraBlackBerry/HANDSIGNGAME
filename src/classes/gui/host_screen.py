@@ -54,7 +54,7 @@ class HostScreen:
         self._joined_box_x = self._popup_x + (self._popup_width - self._joined_box_width) // 2
         self._joined_box_y = self._popup_y + 130
         self._joined_box_rect = pygame.Rect(self._joined_box_x, self._joined_box_y, self._joined_box_width, self._joined_box_height)
-        self._joined_box_text_surface = self._font.render(self._joined_player if self._joined_player else "OPEN SLOT", True, 'black')
+        self._joined_box_text_surface = self._font.render(self._joined_player.name if self._joined_player else "OPEN SLOT", True, 'black')
         
         # Open socket right away
         # Should only close when quitting game or going back to main menu

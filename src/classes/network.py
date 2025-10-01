@@ -7,6 +7,8 @@ class NetPeer:
         self.alive = threading.Event()
         self.alive.set()
         self.lock = threading.Lock()
+        
+        self.player_join_event = None
 
     def host(self, port=5678):
         host_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -83,7 +85,16 @@ class NetPeer:
     def on_message(self, msg):
         match msg["type"]:
             case "join":
-                print(f"Player joined: {msg['content']}")
+                self.player_join_event = msg['content']
+                print("CHECK1")
             case _:
                 print(f"Unknown message type: {msg['type']}")
 
+    def get_player_join_event(self):
+        print("CHECK2")
+        if self.player_join_event is not None:
+            event = self.player_join_event
+            self.player_join_event = None
+            return event
+    
+        return None
