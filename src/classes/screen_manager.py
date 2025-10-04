@@ -19,7 +19,7 @@ class ScreenManager:
         
         # Network function slots
         self._network_host_function = lambda: None
-        self._network_join_function = lambda ip, port=8080: None
+        self._network_join_function = lambda ip, port=5432: None
         self._network_close_function = lambda: None
         self._network_send_function = lambda obj: None
         self._network_receive_player2 = lambda: None
