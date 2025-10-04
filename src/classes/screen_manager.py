@@ -9,10 +9,10 @@ import pygame
 class ScreenManager:
     def __init__(self):
         pygame.init()
-        self._screen = pygame.display.set_mode((1280, 720))
+        self._display = pygame.display.set_mode((1280, 720))
         self.player1 = None
         self.player2 = None
-        self._current_screen = LoginScreen(self._screen)
+        self._current_screen = LoginScreen(self._display)
         self._running = True
         self._game_ready = False
         self._network = None
@@ -39,7 +39,7 @@ class ScreenManager:
                     if name_result is not None and name_result.strip() != "":
                         # Update player name and go to main menu
                         self.player1 = Player(name_result)
-                        self._current_screen = MainMenu(self._screen, self.player1)
+                        self._current_screen = MainMenu(self._display, self.player1)
                         continue
                 
                 # Main menu event handling
@@ -47,9 +47,9 @@ class ScreenManager:
                     # Handle buttons
                     result = self._current_screen.handle_event(event)
                     if result == "Host":
-                        self._current_screen = HostScreen(self._screen, self._network_host_function, self._network_close_function, self.player1)
+                        self._current_screen = HostScreen(self._display, self._network_host_function, self._network_close_function, self.player1)
                     elif result == "Join":
-                        self._current_screen = JoinScreen(self._screen, self._network_join_function, self.player1)
+                        self._current_screen = JoinScreen(self._display, self._network_join_function, self.player1)
                     elif result == "Exit":
                         self._running = False
                         
@@ -80,7 +80,10 @@ class ScreenManager:
                     # Close socket and return to main menu
                     elif result == "Close":
                         self._network_close_function()
-                        self._current_screen = MainMenu(self._screen, self.player1)
+                        self._current_screen = MainMenu(self._display, self.player1)
+                        # TODO: Tell joined player to close if host leaves
+                        # if joined_player is not None:
+                        #    self._network_send_function({"type": "player_left", "content": "Host has quit."})
         
                 # Join screen event handling
                 elif isinstance(self._current_screen, JoinScreen):
@@ -89,14 +92,16 @@ class ScreenManager:
                     if result == "Close":
                         # Close socket and return to main menu
                         self._network_close_function()
-                        self._current_screen = MainMenu(self._screen, self.player1)
+                        self._current_screen = MainMenu(self._display, self.player1)
                     elif result == "Joined":
                         # If join was successful, go to waiting screen
-                        self._current_screen = JoinedScreen(self._screen, self.player1)
+                        self._current_screen = JoinedScreen(self._display, self.player1)
                         if self.player1 is None: return # Make sure name exists
                         self._network_send_function({"type": "join", "content": self.player1.name})
                     elif result == "JoinFailed":
                         # TODO: Add error message display instead of just print
+                        self._network_close_function()
+                        self._current_screen = MainMenu(self._display, self.player1)
                         print("Join failed")
                         
                 # Joined Screen Event Handling
