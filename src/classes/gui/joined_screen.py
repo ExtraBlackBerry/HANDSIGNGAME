@@ -5,8 +5,8 @@ class JoinedScreen:
     def __init__(self, screen, player):
         self._screen = screen
         self._font = pygame.font.Font(None, 30)
-        self._host_name = 'HOST' # TODO: Get from networking class
-        self.player1 = player
+        self.host_player = None
+        self.joined_player = player
         
         # Logo
         self._logo_image = pygame.image.load('assets/logo.png')
@@ -44,13 +44,13 @@ class JoinedScreen:
         self._host_box_x = self._popup_x + (self._popup_width - self._host_box_width) // 2
         self._host_box_y = self._popup_y + 70
         self._host_box_rect = pygame.Rect(self._host_box_x, self._host_box_y, self._host_box_width, self._host_box_height)
-        self._host_box_text_surface = self._font.render(self._host_name, True, 'black')
+        self._host_box_text_surface = self._font.render(self.host_player.name if self.host_player else "Loading", True, 'black')
         # Joined player display box
         self._joined_box_width, self._joined_box_height = 300, 50
         self._joined_box_x = self._popup_x + (self._popup_width - self._joined_box_width) // 2
         self._joined_box_y = self._popup_y + 130
         self._joined_box_rect = pygame.Rect(self._joined_box_x, self._joined_box_y, self._joined_box_width, self._joined_box_height)
-        self._joined_box_text_surface = self._font.render(self.player1.name if self.player1 else "OPEN SLOT", True, 'black')
+        self._joined_box_text_surface = self._font.render(self.joined_player.name, True, 'black')
         
         
         

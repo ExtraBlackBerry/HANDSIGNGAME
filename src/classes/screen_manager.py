@@ -99,6 +99,14 @@ class ScreenManager:
                         # TODO: Add error message display instead of just print
                         print("Join failed")
                         
+                # Joined Screen Event Handling
+                elif isinstance(self._current_screen, JoinedScreen):
+                # Create object to track host player and update display name
+                    host_player = network.player_join_event
+                    if host_player is not None and self.player1 is not None and self.player2 is None:
+                        self.player2 = Player(host_player)
+                        self._current_screen.host_player = self.player2
+                        self._current_screen._host_box_text_surface = self._current_screen._font.render(self.player2.name, True, 'black')
             # Display
             self._current_screen.show()
             pygame.display.flip()

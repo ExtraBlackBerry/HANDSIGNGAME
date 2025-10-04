@@ -89,6 +89,7 @@ class NetPeer:
                 self.player_join_event = msg['content']
             case "host_name":
                 print(f"Host name received: {msg['content']}")
+                self.player_join_event = msg['content']
             case _:
                 print(f"Unknown message type: {msg['type']}")
 
