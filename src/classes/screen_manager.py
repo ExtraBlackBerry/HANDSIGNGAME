@@ -1,10 +1,10 @@
-from gui.host_screen import HostScreen
-from gui.main_menu_screen import MainMenu
-from gui.login_screen import LoginScreen
-from gui.join_screen import JoinScreen
-from gui.joined_screen import JoinedScreen
-from gui.play_screen import PlayScreen
-from player import Player
+from .gui.host_screen import HostScreen
+from .gui.main_menu_screen import MainMenu
+from .gui.login_screen import LoginScreen
+from .gui.join_screen import JoinScreen
+from .gui.joined_screen import JoinedScreen
+from .gui.play_screen import PlayScreen
+from .player import Player
 import pygame
 
 class ScreenManager:
@@ -56,7 +56,7 @@ class ScreenManager:
                         
                 # Host screen event handling
                 elif isinstance(self._current_screen, HostScreen):
-                    joined_player = network.get_player_join_event()
+                    joined_player = self._network.get_player_join_event()
                     if joined_player is not None and self.player1 is not None and self.player2 is None:
                         print(f"Player 2 joined: {joined_player}") 
                         self.player2 = Player(joined_player)
@@ -110,7 +110,7 @@ class ScreenManager:
                 # Joined Screen Event Handling
                 elif isinstance(self._current_screen, JoinedScreen):
                 # Create object to track host player and update display name
-                    host_player = network.player_join_event
+                    host_player = self._network.player_join_event
                     if host_player is not None and self.player1 is not None and self.player2 is None:
                         self.player2 = Player(host_player)
                         self._current_screen.host_player = self.player2
@@ -129,18 +129,3 @@ class ScreenManager:
             
     def start_game(self):
         self._current_screen = PlayScreen(self._display, self.player1, self.player2)
-        
-# Test code
-if __name__ == "__main__":
-    from network import NetPeer
-    network = NetPeer()
-    manager = ScreenManager()
-    network.scr_mgr_start_game = manager.start_game
-    manager._network = network
-    manager._network
-    manager._network_close_function = network.close
-    manager._network_host_function = network.host
-    manager._network_join_function = network.join
-    manager._network_send_function = network.send
-    manager._network_receive_player2 = network.get_player_join_event
-    manager.run()
