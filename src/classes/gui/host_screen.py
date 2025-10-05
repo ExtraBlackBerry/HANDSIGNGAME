@@ -92,7 +92,8 @@ class HostScreen:
         # Status
         status = "Waiting for player..." if not self._joined_player else "Ready!"
         status_text = self._font.render(status, True, "black")
-        self._screen.blit(status_text, (self._popup_x + 100, self._popup_y + 30))
+        status_pos_x = (self._popup_x + 100 if  not self._joined_player else self._popup_x + 170)
+        self._screen.blit(status_text, (status_pos_x, self._popup_y + 30))
 
     def handle_event(self, event):
         # Buttons
