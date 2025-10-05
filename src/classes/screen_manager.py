@@ -113,6 +113,14 @@ class ScreenManager:
                         self.player2 = Player(host_player)
                         self._current_screen.host_player = self.player2
                         self._current_screen._host_box_text_surface = self._current_screen._font.render(self.player2.name, True, 'black')
+
+                    # Handle buttons
+                    result = self._current_screen.handle_event(event) # Also handles input box updates
+                    if result == "Close":
+                        # Close socket and return to main menu
+                        self._network_close_function()
+                        self._current_screen = MainMenu(self._display, self.player1)
+                        # TODO: Tell host joiner left
             # Display
             self._current_screen.show()
             pygame.display.flip()
