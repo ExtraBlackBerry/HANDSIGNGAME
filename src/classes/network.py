@@ -85,10 +85,18 @@ class NetPeer:
     def on_message(self, msg):
         print("Message received:", msg)
         match msg["type"]:
+            case "handshake":
+                print(f"Handshake received: {msg['content']}")
             case "join":
                 self.player_join_event = msg['content']
             case "host_name":
                 print(f"Host name received: {msg['content']}")
+            case "leave":
+                print("Player has left the game.")
+            case "start":
+                print("Game start signal received.")
+            case "close":
+                print("Connection close signal received.")
             case _:
                 print(f"Unknown message type: {msg['type']}")
 
