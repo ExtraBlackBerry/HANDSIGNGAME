@@ -19,7 +19,7 @@ class ScreenManager:
         
         # Network function slots
         self._network_host_function = lambda: None
-        self._network_join_function = lambda ip, port=8080: None
+        self._network_join_function = lambda ip, port=5432: None
         self._network_close_function = lambda: None
         self._network_send_function = lambda obj: None
         self._network_receive_player2 = lambda: None
@@ -55,12 +55,13 @@ class ScreenManager:
                         
                 # Host screen event handling
                 elif isinstance(self._current_screen, HostScreen):
-                    joined_player = network.player_join_event
+                    joined_player = network.get_player_join_event()
                     if joined_player is not None and self.player1 is not None and self.player2 is None:
-                        print(f"Player 2 joined: {joined_player}")
+                        print(f"Player 2 joined: {joined_player}") 
                         self.player2 = Player(joined_player)
                         self._current_screen._joined_player = self.player2
                         self._current_screen._joined_box_text_surface = self._current_screen._font.render(self.player2.name, True, 'black')
+                        
                         self._network_send_function({"type": "host_name", "content": self.player1.name})
                         
                         print("Sent host name to player 2")

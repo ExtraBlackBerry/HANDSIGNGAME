@@ -10,7 +10,7 @@ class NetPeer:
         
         self.player_join_event = None
 
-    def host(self, port=8080):
+    def host(self, port=5432):
         host_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         host_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         host_sock.bind(('', port))
@@ -28,7 +28,7 @@ class NetPeer:
                 self.close()
         threading.Thread(target=accept_loop, daemon=True).start()
     
-    def join(self, ip, port=8080):
+    def join(self, ip, port=5432):
         client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         client.connect((ip, port))
         client.settimeout(0.1)
@@ -83,6 +83,7 @@ class NetPeer:
             print(f"Error closing socket: {e}")
 
     def on_message(self, msg):
+        print("Message received:", msg)
         match msg["type"]:
             case "join":
                 self.player_join_event = msg['content']
