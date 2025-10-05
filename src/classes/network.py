@@ -9,6 +9,9 @@ class NetPeer:
         self.lock = threading.Lock()
         
         self.player_join_event = None
+        
+        # Screen Manager Functions
+        self.scr_mgr_start_game = lambda: None
 
     def host(self, port=5432):
         host_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -87,6 +90,12 @@ class NetPeer:
         match msg["type"]:
             case "handshake":
                 print(f"Handshake received: {msg['content']}")
+                match msg["content"]:
+                    case "":
+                        self.send({"type": "handshake", "content": "ok"})
+                    case "ok":
+                        self.send({"type": "start", "content": "starting game"})
+                        self.scr_mgr_start_game()
             case "join":
                 self.player_join_event = msg['content']
             case "host_name":
@@ -96,6 +105,7 @@ class NetPeer:
                 print("Player has left the game.")
             case "start":
                 print("Game start signal received.")
+                self.scr_mgr_start_game()
             case "close":
                 print("Connection close signal received.")
             case _:

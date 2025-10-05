@@ -3,6 +3,7 @@ from gui.main_menu_screen import MainMenu
 from gui.login_screen import LoginScreen
 from gui.join_screen import JoinScreen
 from gui.joined_screen import JoinedScreen
+from gui.play_screen import PlayScreen
 from player import Player
 import pygame
 
@@ -77,6 +78,7 @@ class ScreenManager:
                     if result == "Start" and self._game_ready:
                         # TODO: Start game
                         # Dont close host socket, just transition to game screen
+                        self._network_send_function({"type": "handshake", "content": ""})
                         print("Start Game - Not implemented")
                     # Close socket and return to main menu
                     elif result == "Close":
@@ -124,13 +126,18 @@ class ScreenManager:
             # Display
             self._current_screen.show()
             pygame.display.flip()
+            
+    def start_game(self):
+        self._current_screen = PlayScreen(self._display, self.player1, self.player2)
         
 # Test code
 if __name__ == "__main__":
     from network import NetPeer
     network = NetPeer()
     manager = ScreenManager()
+    network.scr_mgr_start_game = manager.start_game
     manager._network = network
+    manager._network
     manager._network_close_function = network.close
     manager._network_host_function = network.host
     manager._network_join_function = network.join
