@@ -1,9 +1,9 @@
-from .gui.host_screen import HostScreen
-from .gui.main_menu_screen import MainMenu
-from .gui.login_screen import LoginScreen
-from .gui.join_screen import JoinScreen
-from .gui.joined_screen import JoinedScreen
-from .gui.play_screen import PlayScreen
+from .gui.screens.host_screen import HostScreen
+from .gui.screens.main_menu_screen import MainMenu
+from .gui.screens.login_screen import LoginScreen
+from .gui.screens.join_screen import JoinScreen
+from .gui.screens.joined_screen import JoinedScreen
+from .gui.screens.play_screen import PlayScreen
 from .player import Player
 import pygame
 

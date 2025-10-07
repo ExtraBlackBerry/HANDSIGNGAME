@@ -1,7 +1,7 @@
 import pygame
 
-from .button import Button
-from .input_box import InputBox
+from ..components.button import Button
+from ..components.input_box import InputBox
 
 class JoinScreen:
     def __init__(self, screen, join_function, player):

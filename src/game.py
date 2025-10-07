@@ -2,7 +2,7 @@ import pygame
 from classes.network import NetPeer
 from classes.screen_manager import ScreenManager
 from classes.player import Player
-from classes.gui.play_screen import PlayScreen
+from classes.gui.screens.play_screen import PlayScreen
 
 TEST_NUMBER = 1
 

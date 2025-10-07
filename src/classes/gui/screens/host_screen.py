@@ -1,5 +1,5 @@
 import pygame
-from .button import Button
+from ..components.button import Button
 
 class HostScreen:
     def __init__(self, screen, host_function, close_function, host_player):
