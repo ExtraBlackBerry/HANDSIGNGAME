@@ -13,14 +13,14 @@ class PlayerController:
             self.model = pickle.load(f)
             self.labels = self.model.classes_
         
-        self.hads = self.mp_hands.Hands(
+        self.hands = self.mp_hands.Hands(
             static_image_mode=False,
             max_num_hands=2,
             min_detection_confidence=0.5,
             min_tracking_confidence=0.5
         )
     
-        self.capture = cv2.VideoCapture(0)
+        self.capture = None
 
         self.sign_collection = []
         self.prev_sign = "UNKNOWN"
@@ -30,4 +30,23 @@ class PlayerController:
     def execute_skill(self, skill_name):
         self.skill = ','.join(self.sign_collection)
         if self.skill in self.list_of_skills.keys():
-            return self.ist_of_skills[self.skill]
+            return self.list_of_skills[self.skill]
+        
+    def start_capture(self):
+        self.capture = cv2.VideoCapture(0)
+        pass
+    
+    def stop_capture(self):
+        if self.capture is not None and self.capture.isOpened():
+            self.capture.release()
+        self.capture = None
+        
+    def get_current_frame(self):
+        if self.capture is None or not self.capture.isOpened():
+            return None
+        capture_successful, frame = self.capture.read()
+        if not capture_successful:
+            return None
+        frame = cv2.flip(frame, 1) # Flip so its like a mirror
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        return frame
