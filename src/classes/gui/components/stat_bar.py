@@ -14,14 +14,26 @@ class StatBar:
         self._border_width = 2
         self._orientation = orientation # 'left', 'right' which way the bar fills toward
 
-    def update(self, value_change):
+    def apply_value(self, value_change):
         # Takes pos or neg value as input
+        # Use for applying damage or healing
         self._current_value += value_change
         # Clamp value between 0 and max
-        if self._current_value < 0:
-            self._current_value = 0
-        elif self._current_value > self._max_value:
-            self._current_value = self._max_value
+        self._current_value = self.clamp(self._current_value)
+            
+    def set_current_value(self, new_value):
+        self._current_value = new_value
+        self._current_value = self.clamp(self._current_value)
+        
+    def set_max_value(self, new_max):
+        self._max_value = new_max
+            
+    def clamp(self, value):
+        if value < 0:
+            return 0
+        elif value > self._max_value:
+            return self._max_value
+        return value
 
     def show(self):
         # Draw bg
