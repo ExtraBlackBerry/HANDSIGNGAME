@@ -83,3 +83,6 @@ class PlayScreen:
     
     def start_game(self):
         pass
+    
+    def quit_game(self):
+        self.player1.controller.stop_capture()
