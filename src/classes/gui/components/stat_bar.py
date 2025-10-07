@@ -18,10 +18,10 @@ class StatBar:
         # Takes pos or neg value as input
         # Use for applying damage or healing
         self._current_value += value_change
-        # Clamp value between 0 and max
         self._current_value = self.clamp(self._current_value)
             
     def set_current_value(self, new_value):
+        # Directly set current value
         self._current_value = new_value
         self._current_value = self.clamp(self._current_value)
         
