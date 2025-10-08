@@ -31,3 +31,5 @@ class PlayerController:
         self.skill = ','.join(self.sign_collection)
         if self.skill in self.list_of_skills.keys():
             return self.ist_of_skills[self.skill]
+        
+    
