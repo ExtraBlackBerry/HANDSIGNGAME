@@ -92,6 +92,15 @@ class PlayScreen:
             self.character_display_surface.blit(sprite.image, sprite.rect)
         self.display.blit(self.character_display_surface, self.character_display_rect)
         
+        # Draw shadows below player characters
+        shadow_color = (23, 30, 50, 180)
+        shadow_surface = pygame.Surface((120, 40), pygame.SRCALPHA)
+        pygame.draw.ellipse(shadow_surface, shadow_color, (0, 0, 50, 20))
+        # Player 1 shadow
+        self.character_display_surface.blit(shadow_surface, (295, 420))
+        # Player 2 shadow
+        self.character_display_surface.blit(shadow_surface, (1006, 420))
+        
         # Draw player characters
         player1_sprite = self.player1.current_animation
         player2_sprite = self.player2.current_animation
