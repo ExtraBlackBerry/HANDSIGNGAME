@@ -27,13 +27,9 @@ class PlayScreen:
         # Player 1 Stats display area
         self.player1_health_bar = StatBar(self.display, (sw/10, sh/100), sw/10 * 2, sh/40, 100, 100, (255,0,0))
         self.player1_mana_bar = StatBar(self.display, (sw/10, sh/100 * 4), sw/10 * 1.7, sh/40, 10, 2, (0,0,255))
-        # self.player1_stats_rect = pygame.Rect(sw/10, sh/100, sw/10 * 2, sh/20)
-        # self.player1_stats_surface = pygame.Surface((sw/10 * 2, sh/20))
         # Player 2 Stats display area
         self.player2_health_bar = StatBar(self.display, (sw/10 * 7, sh/100), sw/10 * 2, sh/40, 100, 40, (255,0,0), 'right')
         self.player2_mana_bar = StatBar(self.display, (sw/10 * 7 + sw/10 * 0.3, sh/100 * 4), sw/10 * 1.7, sh/40, 10, 9, (0,0,255), 'right')
-        # self.player2_stats_rect = pygame.Rect(sw/10 * 7, sh/100, sw/10 * 2, sh/20)
-        # self.player2_stats_surface = pygame.Surface((sw/10 * 2, sh/20))
         
         # Sprites
         self.background_sprites = []
@@ -95,12 +91,6 @@ class PlayScreen:
         self.update_player_stat_display()
         
     def update_player_stat_display(self):
-        # Fill pink for now
-        # self.player1_stats_surface.fill((255,0,255))
-        # self.display.blit(self.player1_stats_surface, self.player1_stats_rect)
-        # self.player2_stats_surface.fill((255,0,255))
-        # self.display.blit(self.player2_stats_surface, self.player2_stats_rect)
-        
         self.player1_mana_bar.show()
         self.player2_mana_bar.show()
         self.player1_health_bar.show()
