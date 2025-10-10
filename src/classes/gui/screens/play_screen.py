@@ -64,7 +64,8 @@ class PlayScreen:
         
     def update_camera_display(self):
         # Get current frame from player1's controller
-        frame = self.player1.controller.get_current_frame()
+        #frame = self.player1.controller.get_current_frame()
+        frame = self.player1.controller.control_loop()
         # If no frame, fill black
         if frame is None:
             self.camera_display_surface.fill((0,0,0))
