@@ -45,6 +45,10 @@ class PlayScreen:
             # Resize sprite to fit character display area width
             sprite.image = pygame.transform.scale(sprite.image, (self.character_display_rect.w, sprite.image.get_height()))
             self.background_sprites.append(sprite)
+            
+        # Flip player2 animations horizontally
+        for anim in self.player2.animations.values():
+            anim.mirror(horizontal=True)
 
         # Start player camera capture
         self.player1.controller.start_capture()
@@ -88,7 +92,17 @@ class PlayScreen:
             self.character_display_surface.blit(sprite.image, sprite.rect)
         self.display.blit(self.character_display_surface, self.character_display_rect)
         
+        # Draw player stats
         self.update_player_stat_display()
+        
+        # Draw player characters
+        player1_sprite = self.player1.current_animation
+        player2_sprite = self.player2.current_animation
+        player1_sprite.update()
+        player2_sprite.update()
+        self.character_display_surface.blit(player1_sprite.image, (290, 372))
+        self.character_display_surface.blit(player2_sprite.image, (1000, 372))
+        self.display.blit(self.character_display_surface, self.character_display_rect)
         
     def update_player_stat_display(self):
         self.player1_mana_bar.show()
