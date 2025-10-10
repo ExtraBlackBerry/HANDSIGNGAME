@@ -1,5 +1,7 @@
 import pygame
 from ..components.stat_bar import StatBar
+from ..components.sprite import StaticSprite, AnimatedSprite
+import os
 
 class PlayScreen:
     def __init__(self, screen, player1, player2):
@@ -25,14 +27,29 @@ class PlayScreen:
         # Player 1 Stats display area
         self.player1_health_bar = StatBar(self.display, (sw/10, sh/100), sw/10 * 2, sh/40, 100, 100, (255,0,0))
         self.player1_mana_bar = StatBar(self.display, (sw/10, sh/100 * 4), sw/10 * 1.7, sh/40, 10, 2, (0,0,255))
-        # self.player1_stats_rect = pygame.Rect(sw/10, sh/100, sw/10 * 2, sh/20)
-        # self.player1_stats_surface = pygame.Surface((sw/10 * 2, sh/20))
         # Player 2 Stats display area
         self.player2_health_bar = StatBar(self.display, (sw/10 * 7, sh/100), sw/10 * 2, sh/40, 100, 40, (255,0,0), 'right')
         self.player2_mana_bar = StatBar(self.display, (sw/10 * 7 + sw/10 * 0.3, sh/100 * 4), sw/10 * 1.7, sh/40, 10, 9, (0,0,255), 'right')
-        # self.player2_stats_rect = pygame.Rect(sw/10 * 7, sh/100, sw/10 * 2, sh/20)
-        # self.player2_stats_surface = pygame.Surface((sw/10 * 2, sh/20))
-        
+        self.name_display_font = pygame.font.Font(os.path.join('assets', 'fonts', 'BebasNeue-Regular.ttf'), 30)
+        # Sprites
+        self.background_sprites = []
+        # Iterate folder and load all images as StaticSprites
+        bg_folder = os.path.join('assets', 'background layers')
+        # Sort images by number prefix to ensure correct layering
+        bg_images = sorted(
+            [img for img in os.listdir(bg_folder) if img.endswith('.png')],
+            key=lambda x: int(os.path.splitext(x)[0])
+        )
+        for img in bg_images:
+            sprite = StaticSprite(os.path.join(bg_folder, img), position=(0,-300))
+            # Resize sprite to fit character display area width
+            sprite.image = pygame.transform.scale(sprite.image, (self.character_display_rect.w, sprite.image.get_height()))
+            self.background_sprites.append(sprite)
+            
+        # Flip player2 animations horizontally
+        for anim in self.player2.animations.values():
+            anim.mirror(horizontal=True)
+
         # Start player camera capture
         self.player1.controller.start_capture()
         
@@ -69,19 +86,40 @@ class PlayScreen:
         self.display.blit(self.spell_display_surface, self.spell_display_rect)
         
     def update_character_display(self):
-        # Fill green for now
-        self.character_display_surface.fill((0,255,0))
+        # Draw background sprites
+        self.character_display_surface.fill((0,0,0))
+        for sprite in self.background_sprites:
+            self.character_display_surface.blit(sprite.image, sprite.rect)
         self.display.blit(self.character_display_surface, self.character_display_rect)
         
+        # Draw shadows below player characters
+        shadow_color = (23, 30, 50, 180)
+        shadow_surface = pygame.Surface((120, 40), pygame.SRCALPHA)
+        pygame.draw.ellipse(shadow_surface, shadow_color, (0, 0, 50, 20))
+        # Player 1 shadow
+        self.character_display_surface.blit(shadow_surface, (295, 420))
+        # Player 2 shadow
+        self.character_display_surface.blit(shadow_surface, (1006, 420))
+        
+        # Draw player characters
+        player1_sprite = self.player1.current_animation
+        player2_sprite = self.player2.current_animation
+        player1_sprite.update()
+        player2_sprite.update()
+        self.character_display_surface.blit(player1_sprite.image, (290, 372))
+        self.character_display_surface.blit(player2_sprite.image, (1000, 372))
+        self.display.blit(self.character_display_surface, self.character_display_rect)
+        
+        # Draw player names below where stats will be
+        p1_name_surf = self.name_display_font.render(self.player1.name, True, (255,255,255))
+        p2_name_surf = self.name_display_font.render(self.player2.name, True, (255,255,255))
+        self.display.blit(p1_name_surf, (self.player1_mana_bar._pos[0], self.player1_mana_bar._pos[1] + 30))
+        self.display.blit(p2_name_surf, (self.player2_mana_bar._pos[0] + self.player2_mana_bar._width - p2_name_surf.get_width(), self.player2_mana_bar._pos[1] + 30))
+        
+        # Draw player stats
         self.update_player_stat_display()
         
     def update_player_stat_display(self):
-        # Fill pink for now
-        # self.player1_stats_surface.fill((255,0,255))
-        # self.display.blit(self.player1_stats_surface, self.player1_stats_rect)
-        # self.player2_stats_surface.fill((255,0,255))
-        # self.display.blit(self.player2_stats_surface, self.player2_stats_rect)
-        
         self.player1_mana_bar.show()
         self.player2_mana_bar.show()
         self.player1_health_bar.show()
@@ -96,3 +134,9 @@ class PlayScreen:
     
     def quit_game(self):
         self.player1.controller.stop_capture()
+        
+    def draw_character_display(self):
+        pass
+    
+    def draw_character_display_background(self):
+        pass
