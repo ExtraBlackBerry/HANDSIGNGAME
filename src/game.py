@@ -11,7 +11,7 @@ if TEST_NUMBER == 1:
     network = NetPeer()
     manager = ScreenManager()
     network.scr_mgr_start_game = manager.start_game
-    manager._network = network
+    manager._network = network # type: ignore
     manager._network
     manager._network_close_function = network.close
     manager._network_host_function = network.host
