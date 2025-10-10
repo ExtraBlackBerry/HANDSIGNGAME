@@ -1,5 +1,7 @@
 import pygame
 from ..components.stat_bar import StatBar
+from ..components.sprite import StaticSprite, AnimatedSprite
+import os
 
 class PlayScreen:
     def __init__(self, screen, player1, player2):
@@ -33,6 +35,21 @@ class PlayScreen:
         # self.player2_stats_rect = pygame.Rect(sw/10 * 7, sh/100, sw/10 * 2, sh/20)
         # self.player2_stats_surface = pygame.Surface((sw/10 * 2, sh/20))
         
+        # Sprites
+        self.background_sprites = []
+        # Iterate folder and load all images as StaticSprites
+        bg_folder = os.path.join('assets', 'background layers')
+        # Sort images by number prefix to ensure correct layering
+        bg_images = sorted(
+            [img for img in os.listdir(bg_folder) if img.endswith('.png')],
+            key=lambda x: int(os.path.splitext(x)[0])
+        )
+        for img in bg_images:
+            sprite = StaticSprite(os.path.join(bg_folder, img), position=(0,-300))
+            # Resize sprite to fit character display area width
+            sprite.image = pygame.transform.scale(sprite.image, (self.character_display_rect.w, sprite.image.get_height()))
+            self.background_sprites.append(sprite)
+
         # Start player camera capture
         self.player1.controller.start_capture()
         
@@ -69,8 +86,10 @@ class PlayScreen:
         self.display.blit(self.spell_display_surface, self.spell_display_rect)
         
     def update_character_display(self):
-        # Fill green for now
-        self.character_display_surface.fill((0,255,0))
+        # Draw background sprites
+        self.character_display_surface.fill((0,0,0))
+        for sprite in self.background_sprites:
+            self.character_display_surface.blit(sprite.image, sprite.rect)
         self.display.blit(self.character_display_surface, self.character_display_rect)
         
         self.update_player_stat_display()
@@ -96,3 +115,9 @@ class PlayScreen:
     
     def quit_game(self):
         self.player1.controller.stop_capture()
+        
+    def draw_character_display(self):
+        pass
+    
+    def draw_character_display_background(self):
+        pass
