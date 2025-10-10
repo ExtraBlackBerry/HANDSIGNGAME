@@ -30,7 +30,7 @@ class PlayScreen:
         # Player 2 Stats display area
         self.player2_health_bar = StatBar(self.display, (sw/10 * 7, sh/100), sw/10 * 2, sh/40, 100, 40, (255,0,0), 'right')
         self.player2_mana_bar = StatBar(self.display, (sw/10 * 7 + sw/10 * 0.3, sh/100 * 4), sw/10 * 1.7, sh/40, 10, 9, (0,0,255), 'right')
-        
+        self.name_display_font = pygame.font.Font(os.path.join('assets', 'fonts', 'BebasNeue-Regular.ttf'), 30)
         # Sprites
         self.background_sprites = []
         # Iterate folder and load all images as StaticSprites
@@ -109,6 +109,12 @@ class PlayScreen:
         self.character_display_surface.blit(player1_sprite.image, (290, 372))
         self.character_display_surface.blit(player2_sprite.image, (1000, 372))
         self.display.blit(self.character_display_surface, self.character_display_rect)
+        
+        # Draw player names below where stats will be
+        p1_name_surf = self.name_display_font.render(self.player1.name, True, (255,255,255))
+        p2_name_surf = self.name_display_font.render(self.player2.name, True, (255,255,255))
+        self.display.blit(p1_name_surf, (self.player1_mana_bar._pos[0], self.player1_mana_bar._pos[1] + 30))
+        self.display.blit(p2_name_surf, (self.player2_mana_bar._pos[0] + self.player2_mana_bar._width - p2_name_surf.get_width(), self.player2_mana_bar._pos[1] + 30))
         
         # Draw player stats
         self.update_player_stat_display()
