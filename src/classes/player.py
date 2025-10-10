@@ -17,7 +17,7 @@ class Player:
             'decomposing': AnimatedSprite(self.get_animation_paths('decomposing'), position=(100,100), fps=5, size=self.size),
             'dying': AnimatedSprite(self.get_animation_paths('dying'), position=(100,100), fps=10, size=self.size),
             'hit': AnimatedSprite(self.get_animation_paths('hit'), position=(100,100), fps=15, size=self.size),
-            'idle': AnimatedSprite(self.get_animation_paths('idle'), position=(100,100), fps=5, size=self.size),
+            'idle': AnimatedSprite(self.get_animation_paths('idle'), position=(100,100), fps=10, size=self.size),
         }
         self.current_animation = self.animations['idle']
                 
