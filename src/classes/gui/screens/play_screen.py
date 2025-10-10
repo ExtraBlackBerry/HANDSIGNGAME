@@ -92,9 +92,6 @@ class PlayScreen:
             self.character_display_surface.blit(sprite.image, sprite.rect)
         self.display.blit(self.character_display_surface, self.character_display_rect)
         
-        # Draw player stats
-        self.update_player_stat_display()
-        
         # Draw player characters
         player1_sprite = self.player1.current_animation
         player2_sprite = self.player2.current_animation
@@ -103,6 +100,9 @@ class PlayScreen:
         self.character_display_surface.blit(player1_sprite.image, (290, 372))
         self.character_display_surface.blit(player2_sprite.image, (1000, 372))
         self.display.blit(self.character_display_surface, self.character_display_rect)
+        
+        # Draw player stats
+        self.update_player_stat_display()
         
     def update_player_stat_display(self):
         self.player1_mana_bar.show()
