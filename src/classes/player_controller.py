@@ -40,6 +40,8 @@ class PlayerController:
         self.skill = ','.join(self.sign_collection)
         if self.skill in self.list_of_skills.keys():       
             return self.list_of_skills[self.skill]
+        # If no skill matched, return default no skill, None was an issue
+        return {"skill_name": "Fail", "mana_cost": 0, "damage": 0}
     
     def normalize_data(self, landmarks):
         landmarks = np.array(landmarks).reshape(-1,3)
