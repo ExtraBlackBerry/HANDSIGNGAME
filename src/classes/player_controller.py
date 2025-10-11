@@ -28,7 +28,7 @@ class PlayerController:
         self.prev_sign = "UNKNOWN"
         self.skill_used = ""
         self.list_of_skills = {
-            "Rat" : {"skill_name": "Fireball", "mana_cost": 2, "damage": 20}, # was: Boar, Monkey, Rat, Dog, changed for quick test
+            "Rat" : {"skill_name": "Fireball", "mana_cost": 2, "damage": 220}, # was: Boar, Monkey, Rat, Dog, changed for quick test
             "Ox, Dragon, Tiger" : {"skill_name": "Ice Spike", "mana_cost": 3, "damage": 25},
             "Hare, Snake" : {"skill_name": "Thunder Strike", "mana_cost": 4, "damage": 30},
             "Horse, Goat" : {"skill_name": "Earthquake", "mana_cost": 5, "damage": 35},
