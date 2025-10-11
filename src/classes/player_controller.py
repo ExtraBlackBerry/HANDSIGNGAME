@@ -103,7 +103,7 @@ class PlayerController:
                             self.sign_collection = []
                             # Attack/Fail animation
                             if self.player is not None:
-                                self.player.play_animation('attack')
+                                self.player.play_animation('stomping' if self.skill_used == "Fail" else 'attack')
                                 
                         if current_sign == "Charge":
                             print("CHARGING MANA")
