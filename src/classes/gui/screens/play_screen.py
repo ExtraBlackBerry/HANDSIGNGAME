@@ -145,8 +145,3 @@ class PlayScreen:
     def quit_game(self):
         self.player1.controller.stop_capture()
         
-    def draw_character_display(self):
-        pass
-    
-    def draw_character_display_background(self):
-        pass
