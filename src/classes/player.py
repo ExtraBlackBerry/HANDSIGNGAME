@@ -13,12 +13,12 @@ class Player:
         self.size = (60, 60)  # Default size for animations
         self.animations = {
             'attack': AnimatedSprite(self.get_animation_paths('attack'), position=(100,100), fps=15, size=self.size),
-            'charge': AnimatedSprite(self.get_animation_paths('charge'), position=(100,100), fps=10, size=self.size),
-            'dead': AnimatedSprite(self.get_animation_paths('dead'), position=(100,100), fps=5, size=self.size),
+            'charge': AnimatedSprite(self.get_animation_paths('charge'), position=(100,100), fps=10, size=self.size, loop=True),
+            'dead': AnimatedSprite(self.get_animation_paths('dead'), position=(100,100), fps=5, size=self.size, loop=True),
             'decomposing': AnimatedSprite(self.get_animation_paths('decomposing'), position=(100,100), fps=5, size=self.size),
             'dying': AnimatedSprite(self.get_animation_paths('dying'), position=(100,100), fps=10, size=self.size),
             'hit': AnimatedSprite(self.get_animation_paths('hit'), position=(100,100), fps=15, size=self.size),
-            'idle': AnimatedSprite(self.get_animation_paths('idle'), position=(100,100), fps=10, size=self.size),
+            'idle': AnimatedSprite(self.get_animation_paths('idle'), position=(100,100), fps=10, size=self.size, loop=True),
         }
         self.current_animation = self.animations['idle']
                 

@@ -10,7 +10,7 @@ class StaticSprite(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft=position)
 
 class AnimatedSprite(pygame.sprite.Sprite):
-    def __init__(self, image_paths: list[str], position: tuple[int, int] = (0, 0), fps: int = 30, size: tuple[int, int] = (0, 0)):
+    def __init__(self, image_paths: list[str], position: tuple[int, int] = (0, 0), fps: int = 30, size: tuple[int, int] = (0, 0), loop: bool = False):
         super().__init__()
         # Get frames from list of image paths
         self.frames = []
@@ -29,13 +29,22 @@ class AnimatedSprite(pygame.sprite.Sprite):
         self.current_frame_index = 0
         self.image = self.frames[self.current_frame_index]
         self.last_update = pygame.time.get_ticks()
+        self.loop = loop  # Whether to loop animation
+        self.finished = False # Check for non-looping animations if finished
 
     def update(self):
         # Update frame based on frame rate
         now = pygame.time.get_ticks() # Gets time since pygame.init() in ms
         if now - self.last_update > 1000 // self.frame_rate:
             self.last_update = now
-            self.current_frame_index = (self.current_frame_index + 1) % len(self.frames)
+            self.current_frame_index += 1
+            # Loop or stop at last frame
+            if self.current_frame_index >= len(self.frames):
+                if self.loop:
+                    self.current_frame_index = 0
+                else:
+                    self.current_frame_index = len(self.frames) - 1 # Stay on last frame
+                    self.finished = True
             self.image = self.frames[self.current_frame_index]
             
     def mirror(self, horizontal: bool = True, vertical: bool = False):
