@@ -49,6 +49,10 @@ class PlayScreen:
         # Flip player2 animations horizontally
         for anim in self.player2.animations.values():
             anim.mirror(horizontal=True)
+            
+        # Assign on_skill callback to player controllers
+        self.player1.controller.on_skill = self.on_skill
+        self.player2.controller.on_skill = self.on_skill
 
         # Start player camera capture
         self.player1.controller.start_capture()
@@ -144,4 +148,18 @@ class PlayScreen:
     
     def quit_game(self):
         self.player1.controller.stop_capture()
+    
+    def on_skill(self, player, skill):
+        target = self.player2 if player == self.player1 else self.player1 # Make sure target is the other player
+        mana_cost = skill['mana_cost']
+        damage = skill['damage']
         
+        # Check if player has enough mana and apply skill effects
+        if player.spend_mana(mana_cost):
+            target.take_damage(damage)
+            print(f"{player.name} used {skill['skill_name']} on {target.name} for {damage} damage!")
+            print(f"{player.name} has {player.current_mana} mana left.")
+            print(f"{target.name} has {target.current_health} health left.")
+            # TODO: Update stat bars
+        else:
+            print(f"{player.name} tried to use {skill['skill_name']} but didn't have enough mana!")
