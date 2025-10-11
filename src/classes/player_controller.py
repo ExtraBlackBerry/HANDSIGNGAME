@@ -27,7 +27,7 @@ class PlayerController:
         self.prev_sign = "UNKNOWN"
         self.skill_used = ""
         self.list_of_skills = {
-            "Boar, Monkey, Rat, Dog" : {"skill_name": "Fireball", "mana_cost": 2, "damage": 20},
+            "Rat" : {"skill_name": "Fireball", "mana_cost": 2, "damage": 20}, # was: Boar, Monkey, Rat, Dog, changed for quick test
             "Ox, Dragon, Tiger" : {"skill_name": "Ice Spike", "mana_cost": 3, "damage": 25},
             "Hare, Snake" : {"skill_name": "Thunder Strike", "mana_cost": 4, "damage": 30},
             "Horse, Goat" : {"skill_name": "Earthquake", "mana_cost": 5, "damage": 35},
@@ -96,9 +96,15 @@ class PlayerController:
                         elif len(self.sign_collection) > 0 and self.sign_collection[-1] != current_sign and current_sign != "UNKNOWN" and current_sign != "DEFAULT" and current_sign != "Charge":
                             if self.prev_sign == current_sign:
                                 self.sign_collection.append(current_sign)
+                        # Skill execution
                         if len(self.sign_collection) > 0 and current_sign == "DEFAULT":
+                            # Execute skill and clear collection
                             self.skill_used = self.execute_skill(self.sign_collection)['skill_name']                       
                             self.sign_collection = []
+                            # Attack/Fail animation
+                            if self.player is not None:
+                                self.player.play_animation('attack')
+                                
                         if current_sign == "Charge":
                             print("CHARGING MANA")
                         self.prev_sign = current_sign
