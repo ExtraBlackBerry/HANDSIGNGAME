@@ -25,11 +25,11 @@ class PlayScreen:
         self.character_display_surface = pygame.Surface((sw, sh/3 * 2))
         
         # Player 1 Stats display area
-        self.player1_health_bar = StatBar(self.display, (sw/10, sh/100), sw/10 * 2, sh/40, 100, 100, (255,0,0))
-        self.player1_mana_bar = StatBar(self.display, (sw/10, sh/100 * 4), sw/10 * 1.7, sh/40, 10, 2, (0,0,255))
+        self.player1_health_bar = StatBar(self.display, (sw/10, sh/100), sw/10 * 2, sh/40, self.player1.max_health, self.player1.current_health, (255,0,0))
+        self.player1_mana_bar = StatBar(self.display, (sw/10, sh/100 * 4), sw/10 * 1.7, sh/40, self.player1.max_mana, self.player1.current_mana, (0,0,255))
         # Player 2 Stats display area
-        self.player2_health_bar = StatBar(self.display, (sw/10 * 7, sh/100), sw/10 * 2, sh/40, 100, 40, (255,0,0), 'right')
-        self.player2_mana_bar = StatBar(self.display, (sw/10 * 7 + sw/10 * 0.3, sh/100 * 4), sw/10 * 1.7, sh/40, 10, 9, (0,0,255), 'right')
+        self.player2_health_bar = StatBar(self.display, (sw/10 * 7, sh/100), sw/10 * 2, sh/40, self.player2.max_health, self.player2.current_health, (255,0,0), 'right')
+        self.player2_mana_bar = StatBar(self.display, (sw/10 * 7 + sw/10 * 0.3, sh/100 * 4), sw/10 * 1.7, sh/40, self.player2.max_mana, self.player2.current_mana, (0,0,255), 'right')
         self.name_display_font = pygame.font.Font(os.path.join('assets', 'fonts', 'BebasNeue-Regular.ttf'), 30)
         # Sprites
         self.background_sprites = []
@@ -134,6 +134,13 @@ class PlayScreen:
         self.update_player_stat_display()
         
     def update_player_stat_display(self):
+        # Update stat bars to current player stats
+        self.player1_health_bar.set_current_value(self.player1.current_health)
+        self.player1_mana_bar.set_current_value(self.player1.current_mana)
+        self.player2_health_bar.set_current_value(self.player2.current_health)
+        self.player2_mana_bar.set_current_value(self.player2.current_mana)
+        
+        # Draw the stat bars
         self.player1_mana_bar.show()
         self.player2_mana_bar.show()
         self.player1_health_bar.show()
@@ -157,9 +164,6 @@ class PlayScreen:
         # Check if player has enough mana and apply skill effects
         if player.spend_mana(mana_cost):
             target.take_damage(damage)
-            print(f"{player.name} used {skill['skill_name']} on {target.name} for {damage} damage!")
-            print(f"{player.name} has {player.current_mana} mana left.")
-            print(f"{target.name} has {target.current_health} health left.")
-            # TODO: Update stat bars
         else:
-            print(f"{player.name} tried to use {skill['skill_name']} but didn't have enough mana!")
+            # TODO: Show some UI feedback for not enough mana, for now just stomping
+            player.play_animation('stomping')
