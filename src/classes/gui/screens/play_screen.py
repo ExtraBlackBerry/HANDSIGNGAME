@@ -103,12 +103,21 @@ class PlayScreen:
         self.character_display_surface.blit(shadow_surface, (1006, 420))
         
         # Draw player characters
-        player1_sprite = self.player1.current_animation
-        player2_sprite = self.player2.current_animation
-        player1_sprite.update()
-        player2_sprite.update()
-        self.character_display_surface.blit(player1_sprite.image, (290, 372))
-        self.character_display_surface.blit(player2_sprite.image, (1000, 372))
+        self.player1.update_animation()
+        self.player2.update_animation()
+        # Scuffed size fix: Get anchor at center bottom of idle animation, so all animations align properly
+        p1_base_topleft = (290, 372)
+        p2_base_topleft = (1000, 372)
+        p1_idle = self.player1.animations['idle'].image
+        p2_idle = self.player2.animations['idle'].image
+        p1_anchor = (p1_base_topleft[0] + p1_idle.get_width() // 2,
+                     p1_base_topleft[1] + p1_idle.get_height())
+        p2_anchor = (p2_base_topleft[0] + p2_idle.get_width() // 2,
+                     p2_base_topleft[1] + p2_idle.get_height())
+        p1_rect = self.player1.current_animation.image.get_rect(midbottom=p1_anchor)
+        p2_rect = self.player2.current_animation.image.get_rect(midbottom=p2_anchor)
+        self.character_display_surface.blit(self.player1.current_animation.image, p1_rect)
+        self.character_display_surface.blit(self.player2.current_animation.image, p2_rect)
         self.display.blit(self.character_display_surface, self.character_display_rect)
         
         # Draw player names below where stats will be
