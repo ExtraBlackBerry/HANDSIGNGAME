@@ -10,6 +10,9 @@ class PlayScreen:
         self.player2 = player2
         self._font = pygame.font.Font(None,40)
         self._button_font = pygame.font.Font(None,60)
+
+        #network
+        self.network = None
         
         # Camera display area
         sw, sh = self.display.get_size()
@@ -156,7 +159,9 @@ class PlayScreen:
     def quit_game(self):
         self.player1.controller.stop_capture()
     
-    def on_skill(self, player, skill):
+    def on_skill(self, skill, player = "default"):
+        if player == "default":
+            player = self.player2
         target = self.player2 if player == self.player1 else self.player1 # Make sure target is the other player
         mana_cost = skill['mana_cost']
         damage = skill['damage']

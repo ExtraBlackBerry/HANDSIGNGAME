@@ -2,14 +2,14 @@ from .player_controller import PlayerController
 from .gui.components.sprite import AnimatedSprite
 import os
 class Player:
-    def __init__(self, name) -> None:
+    def __init__(self, name, network) -> None:
         self.name = name
         self.max_health = 100
         self.max_mana = 10
         self.current_health = self.max_health
         self.current_mana = self.max_mana
         self.mana_regeneration = 1 # per second
-        self.controller = PlayerController()
+        self.controller = PlayerController(network)
         self.controller.player = self
         self.dead = False
         

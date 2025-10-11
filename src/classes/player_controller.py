@@ -4,12 +4,15 @@ import pickle
 import numpy as np
 
 class PlayerController:
-    def __init__(self):
+    def __init__(self, network):
         self.mp_hands = mp.solutions.hands
         self.mp_drawing = mp.solutions.drawing_utils
         self.mp_drawing_styles = mp.solutions.drawing_styles
         self.player = None  # Set to the player using this controller
         self.on_skill = None  # Set from play screen to update players stats
+
+        #network
+        self.network = network
 
         with open('models/right_hand_sign_model.pkl', 'rb') as f:
             self.model = pickle.load(f)
@@ -105,7 +108,8 @@ class PlayerController:
                             # Check if enough mana, if not fail
                             if self.player is not None:
                                 if self.on_skill is not None:
-                                    self.on_skill(self.player, self.skill_used)
+                                    #self.on_skill(self.skill_used, self.player)
+                                    self.network.send({"type": "skill", "content": self.skill_used})
                                 # Play animation based on skill success or fail
                                 self.player.play_animation('stomping' if self.skill_used['skill_name'] == "Fail" else 'attack')
                                 

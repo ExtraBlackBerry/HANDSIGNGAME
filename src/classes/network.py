@@ -12,6 +12,7 @@ class NetPeer:
         
         # Screen Manager Functions
         self.scr_mgr_start_game = lambda: None
+        self.on_skill = lambda player, skill: None
 
     def host(self, port=5432):
         host_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -108,8 +109,13 @@ class NetPeer:
                 self.scr_mgr_start_game()
             case "close":
                 print("Connection close signal received.")
+            case "skill":
+                skill = msg['content']
+                self.on_skill(skill)
             case _:
                 print(f"Unknown message type: {msg['type']}")
+
+
 
     def get_player_join_event(self):
         if self.player_join_event is not None:

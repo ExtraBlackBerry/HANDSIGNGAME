@@ -39,7 +39,7 @@ class ScreenManager:
                     name_result = self._current_screen.handle_event(event) # Get name from input box
                     if name_result is not None and name_result.strip() != "":
                         # Update player name and go to main menu
-                        self.player1 = Player(name_result)
+                        self.player1 = Player(name_result, self._network)
                         self._current_screen = MainMenu(self._display, self.player1)
                         continue
                 
@@ -59,7 +59,7 @@ class ScreenManager:
                     joined_player = self._network.get_player_join_event()
                     if joined_player is not None and self.player1 is not None and self.player2 is None:
                         print(f"Player 2 joined: {joined_player}") 
-                        self.player2 = Player(joined_player)
+                        self.player2 = Player(joined_player, self._network)
                         self._current_screen._joined_player = self.player2
                         self._current_screen._joined_box_text_surface = self._current_screen._font.render(self.player2.name, True, 'black')
                         
@@ -112,7 +112,7 @@ class ScreenManager:
                 # Create object to track host player and update display name
                     host_player = self._network.player_join_event
                     if host_player is not None and self.player1 is not None and self.player2 is None:
-                        self.player2 = Player(host_player)
+                        self.player2 = Player(host_player, self._network)
                         self._current_screen.host_player = self.player2
                         self._current_screen._host_box_text_surface = self._current_screen._font.render(self.player2.name, True, 'black')
 
@@ -129,3 +129,4 @@ class ScreenManager:
             
     def start_game(self):
         self._current_screen = PlayScreen(self._display, self.player1, self.player2)
+        self._network.on_skill = self._current_screen.on_skill
