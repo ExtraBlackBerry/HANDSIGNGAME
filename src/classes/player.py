@@ -4,11 +4,14 @@ import os
 class Player:
     def __init__(self, name) -> None:
         self.name = name
-        self.health = 100
-        self.mana = 10
+        self.max_health = 100
+        self.max_mana = 10
+        self.current_health = self.max_health
+        self.current_mana = self.max_mana
         self.mana_regeneration = 1 # per second
         self.controller = PlayerController()
         self.controller.player = self
+        self.dead = False
         
         self.size = (60, 60)  # Default size for animations
         self.animations = {
@@ -22,6 +25,25 @@ class Player:
             'stomping': AnimatedSprite(self.get_animation_paths('stomping'), position=(100,100), fps=10, size=self.size),
         }
         self.current_animation = self.animations['idle']
+        
+    # GAMEPLAY MANAGEMENT
+    
+    def take_damage(self, amount: int):
+        self.current_health -= amount
+        if self.current_health <= 0:
+            self.current_health = 0
+            self.dead = True
+            self.play_death_sequence()
+        else:
+            self.play_animation('hit')
+            
+    def spend_mana(self, amount: int) -> bool:
+        if self.current_mana < amount:
+            return False
+        self.current_mana = max(0, self.current_mana - amount)
+        return True
+        
+    # ANIMATION MANAGEMENT
                 
     def get_animation_paths(self, action: str) -> list[str]:
         base_path = f'assets/player character/{action}'
@@ -48,3 +70,8 @@ class Player:
         if self.current_animation.finished:
             # Go to idle when finished
             self.set_animation('idle')
+    
+    def play_death_sequence(self):
+        self.play_animation('dying')
+        self.play_animation('decomposing')
+        self.play_animation('dead')
