@@ -18,11 +18,14 @@ class AnimatedSprite(pygame.sprite.Sprite):
             if not os.path.isfile(path):
                 raise FileNotFoundError(f"Image file not found: {path}")
             self.frames.append(pygame.image.load(path))
-        if size != (0, 0):  # Resize frames if size is provided
+        # Resize frames if size provided
+        if size != (0, 0):
             self.frames = [pygame.transform.scale(frame, size) for frame in self.frames]
         
-        # Rectangle
-        self.rect = self.frames[0].get_rect(topleft=position)
+        # Initial frame and rect
+        self.current_frame_index = 0
+        self.image = self.frames[self.current_frame_index]
+        self.rect = self.image.get_rect(topleft=position)
         
         # Animation Control
         self.frame_rate =  fps
@@ -51,3 +54,10 @@ class AnimatedSprite(pygame.sprite.Sprite):
         # Mirror all frames
         self.frames = [pygame.transform.flip(frame, horizontal, vertical) for frame in self.frames]
         self.image = self.frames[self.current_frame_index]
+        
+    def reset(self):
+        # Reset animation, ready to be played
+        self.current_frame_index = 0
+        self.finished = False
+        self.image = self.frames[self.current_frame_index]
+        self.last_update = pygame.time.get_ticks()
