@@ -8,6 +8,7 @@ class Player:
         self.mana = 10
         self.mana_regeneration = 1 # per second
         self.controller = PlayerController()
+        self.controller.player = self
         
         self.size = (60, 60)  # Default size for animations
         self.animations = {

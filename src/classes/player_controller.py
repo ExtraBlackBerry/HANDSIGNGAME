@@ -8,6 +8,7 @@ class PlayerController:
         self.mp_hands = mp.solutions.hands
         self.mp_drawing = mp.solutions.drawing_utils
         self.mp_drawing_styles = mp.solutions.drawing_styles
+        self.player = None  # Set to the player using this controller
 
         with open('models/right_hand_sign_model.pkl', 'rb') as f:
             self.model = pickle.load(f)
