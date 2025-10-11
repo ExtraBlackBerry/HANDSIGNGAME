@@ -18,7 +18,6 @@ class Player:
             'attack': AnimatedSprite(self.get_animation_paths('attack'), position=(100,100), fps=15, size=(120,120)),
             'charge': AnimatedSprite(self.get_animation_paths('charge'), position=(100,100), fps=10, size=self.size, loop=True),
             'dead': AnimatedSprite(self.get_animation_paths('dead'), position=(100,100), fps=5, size=self.size, loop=True),
-            'decomposing': AnimatedSprite(self.get_animation_paths('decomposing'), position=(100,100), fps=5, size=self.size),
             'dying': AnimatedSprite(self.get_animation_paths('dying'), position=(100,100), fps=10, size=self.size),
             'hit': AnimatedSprite(self.get_animation_paths('hit'), position=(100,100), fps=15, size=self.size),
             'idle': AnimatedSprite(self.get_animation_paths('idle'), position=(100,100), fps=10, size=self.size, loop=True),
@@ -33,7 +32,7 @@ class Player:
         if self.current_health <= 0:
             self.current_health = 0
             self.dead = True
-            self.play_death_sequence()
+            self.play_animation('dying')
         else:
             self.play_animation('hit')
             
@@ -68,10 +67,8 @@ class Player:
     def update_animation(self):
         self.current_animation.update()
         if self.current_animation.finished:
+            if self.current_animation == self.animations['dying']:
+                self.set_animation('dead')
             # Go to idle when finished
-            self.set_animation('idle')
-    
-    def play_death_sequence(self):
-        self.play_animation('dying')
-        self.play_animation('decomposing')
-        self.play_animation('dead')
+            else:
+                self.set_animation('idle')
