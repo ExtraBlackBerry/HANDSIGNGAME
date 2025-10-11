@@ -108,8 +108,8 @@ class PlayerController:
                             # Check if enough mana, if not fail
                             if self.player is not None:
                                 if self.on_skill is not None:
-                                    #self.on_skill(self.skill_used, self.player)
                                     self.network.send({"type": "skill", "content": self.skill_used})
+                                    self.on_skill(self.skill_used, self.player)
                                 # Play animation based on skill success or fail
                                 self.player.play_animation('stomping' if self.skill_used['skill_name'] == "Fail" else 'attack')
                                 

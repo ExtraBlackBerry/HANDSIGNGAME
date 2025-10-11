@@ -10,9 +10,6 @@ class PlayScreen:
         self.player2 = player2
         self._font = pygame.font.Font(None,40)
         self._button_font = pygame.font.Font(None,60)
-
-        #network
-        self.network = None
         
         # Camera display area
         sw, sh = self.display.get_size()
@@ -59,6 +56,7 @@ class PlayScreen:
 
         # Start player camera capture
         self.player1.controller.start_capture()
+
         
     def show(self):
         
