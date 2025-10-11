@@ -9,6 +9,7 @@ class PlayerController:
         self.mp_drawing = mp.solutions.drawing_utils
         self.mp_drawing_styles = mp.solutions.drawing_styles
         self.player = None  # Set to the player using this controller
+        self.on_skill = None  # Set from play screen to update players stats
 
         with open('models/right_hand_sign_model.pkl', 'rb') as f:
             self.model = pickle.load(f)
@@ -98,12 +99,15 @@ class PlayerController:
                                 self.sign_collection.append(current_sign)
                         # Skill execution
                         if len(self.sign_collection) > 0 and current_sign == "DEFAULT":
-                            # Execute skill and clear collection
-                            self.skill_used = self.execute_skill(self.sign_collection)['skill_name']                       
+                            # Execute stored sequence, then clear collection
+                            self.skill_used = self.execute_skill(self.sign_collection)
                             self.sign_collection = []
-                            # Attack/Fail animation
+                            # Check if enough mana, if not fail
                             if self.player is not None:
-                                self.player.play_animation('stomping' if self.skill_used == "Fail" else 'attack')
+                                if self.on_skill is not None:
+                                    self.on_skill(self.player, self.skill_used)
+                                # Play animation based on skill success or fail
+                                self.player.play_animation('stomping' if self.skill_used['skill_name'] == "Fail" else 'attack')
                                 
                         if current_sign == "Charge":
                             print("CHARGING MANA")
