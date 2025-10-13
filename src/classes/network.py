@@ -15,6 +15,7 @@ class NetPeer:
         self.enemy_heal = lambda: None
         self.on_skill = lambda player, skill: None
         self.animate_enemy = lambda skill: None
+        self.enemy_spend_mana = lambda amount: None
 
     def host(self, port=5432):
         host_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -116,6 +117,7 @@ class NetPeer:
             case "skill":
                 skill = msg['content']
                 self.animate_enemy(skill['skill_name'])
+                self.enemy_spend_mana(skill['mana_cost'])
                 self.on_skill(skill)
                 if skill['skill_name'] == "Heal":
                     self.enemy_heal()
