@@ -141,9 +141,9 @@ class ScreenManager:
                     elif result == "menu":
                         # Close socket and return to main menu
                         self._network_close_function()
+                        self._current_screen = MainMenu(self._display, self.player1)
                         if self.player1 is not None:
                             self.player1.is_hosting = False
-                        self._current_screen = MainMenu(self._display, self.player1)
                         # TODO:
                         # Send leave signal to player 2
             # Display
