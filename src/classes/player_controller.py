@@ -36,7 +36,9 @@ class PlayerController:
             "Ox, Dragon, Tiger" : {"skill_name": "Ice Spike", "mana_cost": 3, "damage": 25},
             "Hare, Snake" : {"skill_name": "Thunder Strike", "mana_cost": 4, "damage": 30},
             "Horse, Goat" : {"skill_name": "Earthquake", "mana_cost": 5, "damage": 35},
-            "Bird, Boar, Rat, Ox" : {"skill_name": "Wind Slash", "mana_cost": 3, "damage": 20}
+            "Bird, Boar, Rat, Ox" : {"skill_name": "Wind Slash", "mana_cost": 3, "damage": 20},
+            "Tiger" : {"skill_name": "Charge", "mana_cost": -2, "damage": 0},
+            "Ox" : {"skill_name": "Heal", "mana_cost": 3, "damage": 0},
         }
 
     def load_skills(self, skills_dict):
@@ -115,9 +117,18 @@ class PlayerController:
                                     executed_skill = {"skill_name": "Not Enough Mana", "mana_cost": 0, "damage": 0}
                             # Send skill
                             if self.on_skill is not None:
-                                self.on_skill(executed_skill, self.player)
+                                if executed_skill['skill_name'] == "Heal":
+                                    self.on_skill(executed_skill, self.player)
+                                    self.player.current_health = min(self.player.max_health, self.player.current_health + 20)
+                                else:
+                                    self.on_skill(executed_skill, self.player)
                             # Play animation based on skill success or fail
-                            self.player.play_animation('stomping' if executed_skill['skill_name'] in ["Fail", "Not Enough Mana"] else 'attack')
+                            if executed_skill['skill_name'] in ["Fail", "Not Enough Mana"]:
+                                self.player.play_animation('stomping')
+                            elif executed_skill['skill_name'] in ["Charge", "Heal"]:
+                                self.player.play_animation('charge')
+                            else:
+                                self.player.play_animation('attack')
                             self.skill_used = executed_skill['skill_name']
                             self.skill_used_name = executed_skill['skill_name'] # Store for display
 
