@@ -1,9 +1,4 @@
-from .gui.screens.host_screen import HostScreen
-from .gui.screens.main_menu_screen import MainMenu
-from .gui.screens.login_screen import LoginScreen
-from .gui.screens.join_screen import JoinScreen
-from .gui.screens.joined_screen import JoinedScreen
-from .gui.screens.play_screen import PlayScreen
+from .gui.screens import *
 from .player import Player
 import pygame
 
@@ -28,6 +23,7 @@ class ScreenManager:
     def run(self):
         # Main loop
         while self._running:
+            
             # Event handling
             for event in pygame.event.get():
                 if event.type == pygame.QUIT: # Quit button
