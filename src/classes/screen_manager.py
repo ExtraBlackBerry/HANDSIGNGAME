@@ -164,3 +164,6 @@ class ScreenManager:
             self.player2.current_health = self.player2.max_health
             self.player2.current_mana = self.player2.max_mana
             self.player2.dead = False
+    
+    def enemy_heal(self):
+        self.player2.current_health = min(self.player2.max_health, self.player2.current_health + 20)

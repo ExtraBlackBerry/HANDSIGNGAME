@@ -118,6 +118,7 @@ class PlayerController:
                                 if executed_skill['skill_name'] == "Heal":
                                     self.player.current_health = min(self.player.max_health, self.player.current_health + 20)
                             self.network.send({"type": "skill", "content": executed_skill})
+                            self.network.on_skill(executed_skill, self.player) # Update locally
                             # Play animation based on skill success or fail
                             if executed_skill['skill_name'] in ["Fail", "Not Enough Mana"]:
                                 self.player.play_animation('stomping')

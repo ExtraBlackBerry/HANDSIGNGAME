@@ -12,6 +12,7 @@ class NetPeer:
         
         # Screen Manager Functions
         self.scr_mgr_start_game = lambda: None
+        self.enemy_heal = lambda: None
         self.on_skill = lambda player, skill: None
 
     def host(self, port=5432):
@@ -114,6 +115,8 @@ class NetPeer:
             case "skill":
                 skill = msg['content']
                 self.on_skill(skill)
+                if skill['skill_name'] == "Heal":
+                    self.enemy_heal()
             case _:
                 print(f"Unknown message type: {msg['type']}")
 

@@ -11,6 +11,7 @@ if TEST_NUMBER == 1:
     network = NetPeer()
     manager = ScreenManager()
     network.scr_mgr_start_game = manager.start_game
+    network.enemy_heal = manager.enemy_heal
     manager._network = network # type: ignore
     manager._network
     manager._network_close_function = network.close
