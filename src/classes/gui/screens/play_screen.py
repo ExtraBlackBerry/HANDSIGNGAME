@@ -52,11 +52,9 @@ class PlayScreen:
         for anim in self.player2.animations.values():
             anim.mirror(horizontal=True)
             
-        # Assign on_skill callback to player controllers
-        self.player1.controller.on_skill = self.on_skill
-        self.player2.controller.on_skill = self.on_skill
-
-        # Start player camera capture
+        # Assign player1 controller and start camera
+        self.player1.assign_controller()
+        self.player1.controller.on_skill = self.on_skill # Set callback for when skill is recognized
         self.player1.controller.start_capture()
 
         

@@ -9,8 +9,8 @@ class Player:
         self.current_health = self.max_health
         self.current_mana = self.max_mana
         self.mana_regeneration = 1 # per second
-        self.controller = PlayerController(network)
-        self.controller.player = self
+        self.controller = None
+        self.network = network
         self.dead = False
         self.is_hosting = False
         
@@ -27,6 +27,10 @@ class Player:
         self.current_animation = self.animations['idle']
         
     # GAMEPLAY MANAGEMENT
+    
+    def assign_controller(self):
+        self.controller = PlayerController(self.network)
+        self.controller.player = self
     
     def take_damage(self, amount: int):
         self.current_health -= amount
