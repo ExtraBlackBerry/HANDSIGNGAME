@@ -24,6 +24,16 @@ class ScreenManager:
         # Main loop
         while self._running:
             
+            # Check for win condition
+            if self.player1 is not None and self.player2 is not None:
+                # Stop player camera and send to game over screen
+                if self.player1.current_health <= 0:
+                    self.player1.controller.stop_capture()
+                    self._current_screen = GameOverScreen(self._display, is_winner=False)
+                elif self.player2.current_health <= 0:
+                    self.player1.controller.stop_capture()
+                    self._current_screen = GameOverScreen(self._display, is_winner=True)
+                    
             # Event handling
             for event in pygame.event.get():
                 if event.type == pygame.QUIT: # Quit button
