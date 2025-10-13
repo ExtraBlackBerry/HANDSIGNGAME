@@ -81,8 +81,10 @@ class NetPeer:
         try:
             if self.connected:
                 self.connected.close()
+                self.connected = None
             if self.sock:
                 self.sock.close()
+                self.sock = None
         except Exception as e:
             print(f"Error closing socket: {e}")
 
