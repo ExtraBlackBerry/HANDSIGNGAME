@@ -9,7 +9,6 @@ class PlayerController:
         self.mp_drawing = mp.solutions.drawing_utils
         self.mp_drawing_styles = mp.solutions.drawing_styles
         self.player = None  # Set to the player using this controller
-        self.on_skill = None  # Set from play screen to update players stats
 
         #network
         self.network = network
@@ -116,12 +115,9 @@ class PlayerController:
                                 else:
                                     executed_skill = {"skill_name": "Not Enough Mana", "mana_cost": 0, "damage": 0}
                             # Send skill
-                            if self.on_skill is not None:
                                 if executed_skill['skill_name'] == "Heal":
-                                    self.on_skill(executed_skill, self.player)
                                     self.player.current_health = min(self.player.max_health, self.player.current_health + 20)
-                                else:
-                                    self.on_skill(executed_skill, self.player)
+                            self.network.send({"type": "skill", "content": executed_skill})
                             # Play animation based on skill success or fail
                             if executed_skill['skill_name'] in ["Fail", "Not Enough Mana"]:
                                 self.player.play_animation('stomping')
