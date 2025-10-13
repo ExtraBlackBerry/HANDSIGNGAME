@@ -4,7 +4,7 @@ from classes.screen_manager import ScreenManager
 from classes.player import Player
 from classes.gui.screens import PlayScreen, GameOverScreen
 
-TEST_NUMBER = 3
+TEST_NUMBER = 1
 
 if TEST_NUMBER == 1:
     # Test full program with networking
