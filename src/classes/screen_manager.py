@@ -167,3 +167,11 @@ class ScreenManager:
     
     def enemy_heal(self):
         self.player2.current_health = min(self.player2.max_health, self.player2.current_health + 20)
+    
+    def animate_enemy(self, skill: str):
+        if skill in ["Fail", "Not Enough Mana"]:
+            self.player2.play_animation('stomping')
+        elif skill in ["Charge", "Heal"]:
+            self.player2.play_animation('charge')
+        else:
+            self.player2.play_animation('attack')

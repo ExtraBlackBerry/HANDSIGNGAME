@@ -14,6 +14,7 @@ class NetPeer:
         self.scr_mgr_start_game = lambda: None
         self.enemy_heal = lambda: None
         self.on_skill = lambda player, skill: None
+        self.animate_enemy = lambda skill: None
 
     def host(self, port=5432):
         host_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -114,6 +115,7 @@ class NetPeer:
                 print("Connection close signal received.")
             case "skill":
                 skill = msg['content']
+                self.animate_enemy(skill)
                 self.on_skill(skill)
                 if skill['skill_name'] == "Heal":
                     self.enemy_heal()
