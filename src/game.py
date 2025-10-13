@@ -23,9 +23,10 @@ if TEST_NUMBER == 1:
 if TEST_NUMBER == 2:
     # Test only PlayScreen display
     pygame.init()
+    network = NetPeer()
     screen = pygame.display.set_mode((1280, 720))
-    player1 = Player("Player1")
-    player2 = Player("Player2")
+    player1 = Player("Player1", network)
+    player2 = Player("Player2", network)
     play_screen = PlayScreen(screen, player1, player2)
     running = True
     while running:
