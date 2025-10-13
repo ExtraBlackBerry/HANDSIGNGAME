@@ -12,6 +12,7 @@ class Player:
         self.controller = PlayerController(network)
         self.controller.player = self
         self.dead = False
+        self.is_hosting = False
         
         self.size = (60, 60)  # Default size for animations
         self.animations = {

@@ -2,10 +2,12 @@ import pygame
 from ..components.button import Button
 
 class GameOverScreen:
-    def __init__(self, screen, is_winner):
+    def __init__(self, screen, is_winner, player1, player2):
         self._screen = screen
         self._is_winner = is_winner
         self._font = pygame.font.Font(None, 30)
+        self._player1 = player1
+        self._player2 = player2
         
         # Logo (Making it look like host screen for now)
         self._logo_image = pygame.image.load('assets/logo.png')
@@ -61,10 +63,10 @@ class GameOverScreen:
         text_rect = self._result_text.get_rect(center=(self._popup_x + self._popup_width//2, self._popup_y + 70))
         self._screen.blit(self._result_text, text_rect)
         
-        # Draw buttons
+        # Draw buttons, both get quit, host gets restart as well
         for button in self.buttons:
-            button.show(self._screen)
-            button.is_hovered(pygame.mouse.get_pos())
+            if self._player1.is_hosting or button._button_name != "restart":
+                button.show(self._screen)
 
     def handle_event(self, event):
         # Buttons

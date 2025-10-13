@@ -62,6 +62,7 @@ class ScreenManager:
                         
                 # Host screen event handling
                 elif isinstance(self._current_screen, HostScreen):
+                    self.player1.is_hosting = True
                     joined_player = self._network.get_player_join_event()
                     if joined_player is not None and self.player1 is not None and self.player2 is None:
                         print(f"Player 2 joined: {joined_player}") 
@@ -89,6 +90,7 @@ class ScreenManager:
                     # Close socket and return to main menu
                     elif result == "Close":
                         self._network_close_function()
+                        self.player1.is_hosting = False
                         self._current_screen = MainMenu(self._display, self.player1)
                         # TODO: Tell joined player to close if host leaves
                         # if joined_player is not None:
@@ -129,6 +131,29 @@ class ScreenManager:
                         self._network_close_function()
                         self._current_screen = MainMenu(self._display, self.player1)
                         # TODO: Tell host joiner left
+                        
+                # Game Over Screen event handling
+                elif isinstance(self._current_screen, GameOverScreen):
+                    result = self._current_screen.handle_event(event)
+                    if result == "restart" and self.player1 is not None and self.player2 is not None:
+                        # Restart game with same players
+                        self.player1.current_health = self.player1.max_health
+                        self.player1.current_mana = self.player1.max_mana
+                        self.player2.current_health = self.player2.max_health
+                        self.player2.current_mana = self.player2.max_mana
+                        self.player1.dead = False
+                        self.player2.dead = False
+                        # TODO
+                        # Send restart signal to player 2
+                        # send handshake and both players to start game
+                    elif result == "menu":
+                        # Close socket and return to main menu
+                        self._network_close_function()
+                        if self.player1 is not None:
+                            self.player1.is_hosting = False
+                        self._current_screen = MainMenu(self._display, self.player1)
+                        # TODO:
+                        # Send leave signal to player 2
             # Display
             self._current_screen.show()
             pygame.display.flip()
