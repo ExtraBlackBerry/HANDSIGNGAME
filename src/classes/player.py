@@ -17,7 +17,7 @@ class Player:
         self.size = (60, 60)  # Default size for animations
         self.animations = {
             'attack': AnimatedSprite(self.get_animation_paths('attack'), position=(100,100), fps=15, size=(120,120)),
-            'charge': AnimatedSprite(self.get_animation_paths('charge'), position=(100,100), fps=10, size=self.size, loop=True),
+            'charge': AnimatedSprite(self.get_animation_paths('charge'), position=(100,100), fps=10, size=(120,120)),
             'dead': AnimatedSprite(self.get_animation_paths('dead'), position=(100,100), fps=5, size=self.size, loop=True),
             'dying': AnimatedSprite(self.get_animation_paths('dying'), position=(100,100), fps=10, size=self.size),
             'hit': AnimatedSprite(self.get_animation_paths('hit'), position=(100,100), fps=15, size=self.size),
