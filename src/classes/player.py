@@ -35,7 +35,8 @@ class Player:
             self.dead = True
             self.play_animation('dying')
         else:
-            self.play_animation('hit')
+            if amount > 0:
+                self.play_animation('hit')
             
     def spend_mana(self, amount: int) -> bool:
         if self.current_mana < amount:
