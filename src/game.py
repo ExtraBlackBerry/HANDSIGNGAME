@@ -26,6 +26,7 @@ if TEST_NUMBER == 2:
     network = NetPeer()
     screen = pygame.display.set_mode((1280, 720))
     player1 = Player("Player1", network)
+    player1.take_damage(30) # For testing health bar display
     player2 = Player("Player2", network)
     play_screen = PlayScreen(screen, player1, player2)
     running = True
