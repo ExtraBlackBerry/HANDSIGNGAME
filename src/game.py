@@ -2,9 +2,9 @@ import pygame
 from classes.network import NetPeer
 from classes.screen_manager import ScreenManager
 from classes.player import Player
-from classes.gui.screens.play_screen import PlayScreen
+from classes.gui.screens import PlayScreen, GameOverScreen
 
-TEST_NUMBER = 1
+TEST_NUMBER = 3
 
 if TEST_NUMBER == 1:
     # Test full program with networking
@@ -35,5 +35,20 @@ if TEST_NUMBER == 2:
                 running = False
             play_screen.handle_event(event)
         play_screen.show()
+        pygame.display.flip()
+    pygame.quit()
+    
+if TEST_NUMBER == 3:
+    # Test GameOverScreen display
+    pygame.init()
+    screen = pygame.display.set_mode((1280, 720))
+    game_over_screen = GameOverScreen(screen, is_winner=True)
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            game_over_screen.handle_event(event)
+        game_over_screen.show()
         pygame.display.flip()
     pygame.quit()
