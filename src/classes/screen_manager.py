@@ -137,15 +137,7 @@ class ScreenManager:
                     result = self._current_screen.handle_event(event)
                     if result == "restart" and self.player1 is not None and self.player2 is not None:
                         # Restart game with same players
-                        self.player1.current_health = self.player1.max_health
-                        self.player1.current_mana = self.player1.max_mana
-                        self.player2.current_health = self.player2.max_health
-                        self.player2.current_mana = self.player2.max_mana
-                        self.player1.dead = False
-                        self.player2.dead = False
-                        # TODO
-                        # Send restart signal to player 2
-                        # send handshake and both players to start game
+                        self._network_send_function({"type": "handshake", "content": ""})
                     elif result == "menu":
                         # Close socket and return to main menu
                         self._network_close_function()
@@ -159,5 +151,16 @@ class ScreenManager:
             pygame.display.flip()
             
     def start_game(self):
+        self.reset_characters()
         self._current_screen = PlayScreen(self._display, self.player1, self.player2)
         self._network.on_skill = self._current_screen.on_skill
+        
+    def reset_characters(self):
+        if self.player1 is not None:
+            self.player1.current_health = self.player1.max_health
+            self.player1.current_mana = self.player1.max_mana
+            self.player1.dead = False
+        if self.player2 is not None:
+            self.player2.current_health = self.player2.max_health
+            self.player2.current_mana = self.player2.max_mana
+            self.player2.dead = False
