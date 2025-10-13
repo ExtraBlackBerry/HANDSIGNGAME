@@ -30,6 +30,7 @@ class PlayerController:
         self.sign_collection = []
         self.prev_sign = "UNKNOWN"
         self.skill_used = ""
+        self.skill_used_name = None
         self.list_of_skills = {
             "Rat" : {"skill_name": "Fireball", "mana_cost": 2, "damage": 20}, # was: Boar, Monkey, Rat, Dog, changed for quick test
             "Ox, Dragon, Tiger" : {"skill_name": "Ice Spike", "mana_cost": 3, "damage": 25},
@@ -103,16 +104,23 @@ class PlayerController:
                         # Skill execution
                         if len(self.sign_collection) > 0 and current_sign == "DEFAULT":
                             # Execute stored sequence, then clear collection
-                            self.skill_used = self.execute_skill(self.sign_collection)
+                            pending_skill = self.execute_skill(self.sign_collection)
                             self.sign_collection = []
-                            # Check if enough mana, if not fail
+                            executed_skill = {"skill_name": "Fail", "mana_cost": 0, "damage": 0}
                             if self.player is not None:
-                                if self.on_skill is not None:
-                                    self.network.send({"type": "skill", "content": self.skill_used})
-                                    self.on_skill(self.skill_used, self.player)
-                                # Play animation based on skill success or fail
-                                self.player.play_animation('stomping' if self.skill_used['skill_name'] == "Fail" else 'attack')
-                                
+                                # Check if enough mana
+                                if self.player.spend_mana(pending_skill['mana_cost']):
+                                    executed_skill = pending_skill
+                                else:
+                                    executed_skill = {"skill_name": "Not Enough Mana", "mana_cost": 0, "damage": 0}
+                            # Send skill
+                            if self.on_skill is not None:
+                                self.on_skill(executed_skill, self.player)
+                            # Play animation based on skill success or fail
+                            self.player.play_animation('stomping' if executed_skill['skill_name'] in ["Fail", "Not Enough Mana"] else 'attack')
+                            self.skill_used = executed_skill['skill_name']
+                            self.skill_used_name = executed_skill['skill_name'] # Store for display
+
                         if current_sign == "Charge":
                             print("CHARGING MANA")
                         self.prev_sign = current_sign
@@ -122,8 +130,4 @@ class PlayerController:
                 h,w, _ = self.frame.shape
                 cx = int(hand_landmarks.landmark[self.mp_hands.HandLandmark.WRIST].x * w)
                 cy = int(hand_landmarks.landmark[self.mp_hands.HandLandmark.WRIST].y * h) - 50
-
-                cv2.putText(self.frame, f'Sign Collected: {self.sign_collection}', (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
-                cv2.putText(self.frame, f'Skill Used: {self.skill_used}', (50, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
-
         return self.frame

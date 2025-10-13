@@ -19,6 +19,7 @@ class PlayScreen:
         # Spell display area
         self.spell_display_rect = pygame.Rect(0, sh/3 * 2, sw/4 * 3, sh/3)
         self.spell_display_surface = pygame.Surface((sw/4 * 3, sh/3))
+        self.skill_text = None
         
         # Character display area
         self.character_display_rect = pygame.Rect(0, 0, sw, sh/3 * 2)
@@ -31,6 +32,7 @@ class PlayScreen:
         self.player2_health_bar = StatBar(self.display, (sw/10 * 7, sh/100), sw/10 * 2, sh/40, self.player2.max_health, self.player2.current_health, (255,0,0), 'right')
         self.player2_mana_bar = StatBar(self.display, (sw/10 * 7 + sw/10 * 0.3, sh/100 * 4), sw/10 * 1.7, sh/40, self.player2.max_mana, self.player2.current_mana, (0,0,255), 'right')
         self.name_display_font = pygame.font.Font(os.path.join('assets', 'fonts', 'BebasNeue-Regular.ttf'), 30)
+        
         # Sprites
         self.background_sprites = []
         # Iterate folder and load all images as StaticSprites
@@ -87,9 +89,15 @@ class PlayScreen:
         self.display.blit(self.camera_display_surface, self.camera_display_rect)
     
     def update_spell_display(self):
-        # Fill dark gray for now
-        self.spell_display_surface.fill((37,38,43))
+        last_skill = self.player1.controller.skill_used_name
+        self.spell_display_surface.fill((37, 37, 38))
+        signs = self.player1.controller.sign_collection
+        display_text = ", ".join(signs) if signs else (last_skill if last_skill else "Empty")
+        text_surf = self.name_display_font.render(display_text, True, (255,255,255))
+        text_rect = text_surf.get_rect(center=(self.spell_display_rect.w/2, self.spell_display_rect.h/2))
+        self.spell_display_surface.blit(text_surf, text_rect)
         self.display.blit(self.spell_display_surface, self.spell_display_rect)
+            
         
     def update_character_display(self):
         # Draw background sprites
@@ -164,9 +172,5 @@ class PlayScreen:
         mana_cost = skill['mana_cost']
         damage = skill['damage']
         
-        # Check if player has enough mana and apply skill effects
-        if player.spend_mana(mana_cost):
-            target.take_damage(damage)
-        else:
-            # TODO: Show some UI feedback for not enough mana, for now just stomping
-            player.play_animation('stomping')
+        # Mana already checked in controller before sending skill, just apply damage
+        target.take_damage(damage)
