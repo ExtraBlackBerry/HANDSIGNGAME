@@ -115,7 +115,7 @@ class NetPeer:
                 print("Connection close signal received.")
             case "skill":
                 skill = msg['content']
-                self.animate_enemy(skill)
+                self.animate_enemy(skill['skill_name'])
                 self.on_skill(skill)
                 if skill['skill_name'] == "Heal":
                     self.enemy_heal()
