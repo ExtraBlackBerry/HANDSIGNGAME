@@ -24,16 +24,6 @@ class ScreenManager:
         # Main loop
         while self._running:
             
-            # Check for win condition
-            if self.player1 is not None and self.player2 is not None:
-                # Stop player camera and send to game over screen
-                if self.player1.current_health <= 0:
-                    self.player1.controller.stop_capture()
-                    self._current_screen = GameOverScreen(self._display, is_winner=False, player1=self.player1, player2=self.player2)
-                elif self.player2.current_health <= 0:
-                    self.player1.controller.stop_capture()
-                    self._current_screen = GameOverScreen(self._display, is_winner=True, player1=self.player1, player2=self.player2)
-
             # Event handling
             for event in pygame.event.get():
                 if event.type == pygame.QUIT: # Quit button
@@ -59,6 +49,19 @@ class ScreenManager:
                         self._current_screen = JoinScreen(self._display, self._network_join_function, self.player1)
                     elif result == "Exit":
                         self._running = False
+                        
+                # Play screen event handling
+                elif isinstance(self._current_screen, PlayScreen):
+                    # Check for win condition
+                    if self.player1 is not None and self.player2 is not None:
+                        # Stop player camera and send to game over screen
+                        if self.player1.current_health <= 0:
+                            self.player1.controller.stop_capture()
+                            self._current_screen = GameOverScreen(self._display, is_winner=False, player1=self.player1, player2=self.player2)
+                        elif self.player2.current_health <= 0:
+                            self.player1.controller.stop_capture()
+                            self._current_screen = GameOverScreen(self._display, is_winner=True, player1=self.player1, player2=self.player2)
+
                         
                 # Host screen event handling
                 elif isinstance(self._current_screen, HostScreen):
